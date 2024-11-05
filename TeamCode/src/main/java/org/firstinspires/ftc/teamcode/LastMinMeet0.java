@@ -1,10 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 
 
 
@@ -35,6 +31,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
             // See the note about this earlier on this page.
             frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
             backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+             frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
             waitForStart();
@@ -58,12 +58,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
                 // Denominator is the largest motor power (absolute value) or 1
                 // This ensures all the powers maintain the same ratio,
                 // but only if at least one is out of the range [-1, 1]
-
                 double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-                double frontLeftPower = 0.8*(y + x + rx) / denominator;
-                double backLeftPower = 0.8*-(y - x + rx) / denominator;
-                double frontRightPower = 0.8*-(y - x - rx) / denominator;
-                double backRightPower = 0.8*-(y + x - rx) / denominator;
+                double frontLeftPower = (y + x + rx) / denominator;
+                double backLeftPower =-(y - x + rx) / denominator;
+                double frontRightPower = -(y - x - rx) / denominator;
+                double backRightPower = -(y + x - rx) / denominator;
 
                 frontLeftMotor.setPower(frontLeftPower);
                 backLeftMotor.setPower(backLeftPower);
