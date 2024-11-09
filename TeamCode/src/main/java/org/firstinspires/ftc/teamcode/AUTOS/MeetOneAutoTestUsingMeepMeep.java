@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+//import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name = "Meet_1_Auto")
 public class MeetOneAutoTestUsingMeepMeep extends LinearOpMode {
@@ -15,24 +15,24 @@ public class MeetOneAutoTestUsingMeepMeep extends LinearOpMode {
 
         // Define start pose
         Pose2d startPose = new Pose2d(-58, -63.5, Math.toRadians(0));
-        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
-        drive.setPoseEstimate(startPose);
+       // MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+//        drive.setPoseEstimate(startPose);
 
         // Define trajectory sequence
-        TrajectorySequence myTrajectory = drive.trajectorySequenceBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(-48, -33, Math.toRadians(90)), Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
-                .splineToLinearHeading(new Pose2d(-58, -33, Math.toRadians(90)), Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
-                .splineToLinearHeading(new Pose2d(-66, -33, Math.toRadians(120)), Math.toRadians(120))
-                .splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
-                .build();
+//        TrajectorySequence myTrajectory = drive.trajectorySequenceBuilder(startPose)
+//                .splineToLinearHeading(new Pose2d(-48, -33, Math.toRadians(90)), Math.toRadians(90))
+//                .splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//                .splineToLinearHeading(new Pose2d(-58, -33, Math.toRadians(90)), Math.toRadians(90))
+//                .splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//                .splineToLinearHeading(new Pose2d(-66, -33, Math.toRadians(120)), Math.toRadians(120))
+//                .splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//                .build();
 
         waitForStart();
         if (isStopRequested()) return;
 
         // Run the trajectory sequence
-        drive.followTrajectorySequence(myTrajectory);
+//        drive.followTrajectorySequence(myTrajectory);
     }
 }
 
