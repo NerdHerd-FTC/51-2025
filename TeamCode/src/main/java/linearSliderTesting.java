@@ -3,20 +3,26 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name = "armTesting")
-public class linearSliderTesting extends OpMode {
+public class linearSliderTesting extends LinearOpMode {
+    DcMotor leftSlide;
 
     @Override
-    public void init() {
-        DcMotor leftSlide = hardwareMap.dcMotor.get("leftSlide");
-        leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftSlide.getCurrentPosition();
+    public void runOpMode() throws InterruptedException {
+        leftSlide = hardwareMap.dcMotor.get("slideLeft");
+        waitForStart();
+        if (isStopRequested()) return;
 
-        leftSlide.isBusy();
-
+        while (opModeIsActive()) {
+            // Main control loop
+            double power = gamepad1.left_stick_y;
+            leftSlide.setPower(power);
+            telemetry.addData("Left Slide:", leftSlide.getCurrentPosition());
+        }
     }
 
-    @Override
-    public void loop() {
+ 
 
-    }
+
+
+
 }
