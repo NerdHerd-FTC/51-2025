@@ -70,8 +70,8 @@ public class fieldCentricDrive extends LinearOpMode {
 
             frontLeftMotor.setPower(frontLeftPower);
             backLeftMotor.setPower(backLeftPower);
-            frontRightMotor.setPower(frontRightPower);
-            backRightMotor.setPower(backRightPower);
+            frontRightMotor.setPower(-frontRightPower);
+            backRightMotor.setPower(-backRightPower);
         }
     }
 }
