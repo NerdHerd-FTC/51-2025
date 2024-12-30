@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.arcrobotics.ftclib.controller.PIDController;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -71,6 +72,12 @@ public class Meet3Code extends LinearOpMode {
                 RevHubOrientationOnRobot.LogoFacingDirection.DOWN,
                 RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
         imu.initialize(parameters);
+
+        PIDController armPID = new PIDController(0.01, 0, 0);
+        armPID.setTolerance(20,50);
+
+
+
 
 
         waitForStart();

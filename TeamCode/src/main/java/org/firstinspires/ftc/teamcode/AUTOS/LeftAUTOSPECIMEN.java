@@ -316,24 +316,24 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
         int visionOutputPosition = 1;
 
         Action tab1 = drive.actionBuilder(initialPose)
-                .splineToLinearHeading(new Pose2d(-52, -63.5, Math.toRadians(90)), Math.toRadians(45))
-                .waitSeconds(3)
                 .splineToLinearHeading(new Pose2d(-53, -53, Math.toRadians(45)), Math.toRadians(45))
-                .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(-47, -50, Math.toRadians(90)), Math.toRadians(90))
-                .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(-53, -53, Math.toRadians(45)), Math.toRadians(45))
-                .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(-58.5, -50, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -33, Math.toRadians(90)), Math.toRadians(90))
-                .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(-53, -53, Math.toRadians(45)), Math.toRadians(45))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
-                .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(-60, -50, Math.toRadians(105)), Math.toRadians(105))//.splineToLinearHeading(new Pose2d(-58, -33, Math.toRadians(90)), Math.toRadians(90))
-                .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(-53, -53, Math.toRadians(45)), Math.toRadians(45))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
-                .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(-25, -2, Math.toRadians(0)), Math.toRadians(0))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
                 .waitSeconds(1).build();
+//                .splineToLinearHeading(new Pose2d(-47.5, -50, Math.toRadians(90)), Math.toRadians(90))
+//                .waitSeconds(1)
+//                .splineToLinearHeading(new Pose2d(-54, -53, Math.toRadians(45)), Math.toRadians(45))
+//                .waitSeconds(1)
+//                .splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -33, Math.toRadians(90)), Math.toRadians(90))
+//                .waitSeconds(1)
+//                .splineToLinearHeading(new Pose2d(-53, -53, Math.toRadians(45)), Math.toRadians(45))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//                .waitSeconds(1)
+//                .splineToLinearHeading(new Pose2d(-57.5, -50, Math.toRadians(115)), Math.toRadians(115))//.splineToLinearHeading(new Pose2d(-58, -33, Math.toRadians(90)), Math.toRadians(90))
+//                .waitSeconds(1)
+//                .splineToLinearHeading(new Pose2d(-53, -53, Math.toRadians(45)), Math.toRadians(45))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//                .waitSeconds(1)
+//                .splineToLinearHeading(new Pose2d(-25, -12, Math.toRadians(0)), Math.toRadians(0))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//                .waitSeconds(1).build();
+
+
 
         waitForStart();
 

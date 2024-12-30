@@ -33,7 +33,7 @@ public class armControlPID extends OpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         armR = hardwareMap.get(DcMotorEx.class, "armR");
-        armR = hardwareMap.get(DcMotorEx.class, "armL");
+        armL = hardwareMap.get(DcMotorEx.class, "armL");
     }
 
     @Override
@@ -55,3 +55,32 @@ public class armControlPID extends OpMode {
         telemetry.update();
     }
 }
+//package org.firstinspires.ftc.teamcode.PIDControl;
+//
+//import com.acmerobotics.dashboard.FtcDashboard;
+//import com.acmerobotics.dashboard.config.Config;
+//import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+//import com.arcrobotics.ftclib.controller.PIDController;
+//import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+//import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+//import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+//import com.qualcomm.robotcore.hardware.DcMotorEx;
+//
+//@Config
+//@TeleOp
+//public class armControlPID extends LinearOpMode {
+//        DcMotorEx armR;
+//    DcMotorEx armL;
+//
+//
+//    @Override
+//    public void runOpMode() throws InterruptedException {
+//    armR = hardwareMap.get(DcMotorEx.class, "armR");
+//        armL = hardwareMap.get(DcMotorEx.class, "armR");
+//        waitForStart();
+//        while(opModeIsActive()) {
+//
+//        }
+//    }
+//}
+//
