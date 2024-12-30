@@ -16,7 +16,7 @@ public class MeepMeepTesting {
                 .setDimensions(18, 17)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(7 , -60, Math.toRadians(90)))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-53 , -53, Math.toRadians(90)))
                 //intake off but powered
               //  .strafeTo(new Vector2d(-53, -37))
                 //arm is at specimen position

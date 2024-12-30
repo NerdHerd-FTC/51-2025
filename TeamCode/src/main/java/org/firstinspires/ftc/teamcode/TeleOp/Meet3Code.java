@@ -95,7 +95,7 @@ public class Meet3Code extends LinearOpMode {
             }
             if (manual) {
                 slideManual();
-                armManual();
+               // armManual();
             } else {
                 slideControl();
                 armControl();
@@ -224,6 +224,7 @@ public class Meet3Code extends LinearOpMode {
                     runToPosition(ARM_SCORE_POSITION);
                 } else if (gamepad2.right_bumper) {
                     runToPosition(ARM_COLLECT_POSITION);
+                    manual = true;
                 }
             }
             private void armManual () {
