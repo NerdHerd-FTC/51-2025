@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -35,9 +36,12 @@ public class Meet3Code extends LinearOpMode {
 
 
     private static final double TICKS_PER_DEGREE = 537.7 / 360;
-    private static final double EXTENDED_SLIDE_TICKS = - 810;
-    private static final double ARM_SCORE_POSITION = -100;
-    private static final double ARM_COLLECT_POSITION = 1200;
+    private static final double EXTENDED_SLIDE_TICKS = - 2000;
+
+    private static final double COLLECT_SLIDE_TICKS = - 810;
+
+    private static final double ARM_SCORE_POSITION = -625;
+    private static final double ARM_COLLECT_POSITION = 950;
 
     private static final double SERVO_POWER_INTAKE = 1.0;
     private static final double SERVO_POWER_OUT = -0.5;
@@ -51,6 +55,14 @@ public class Meet3Code extends LinearOpMode {
     private double redValue;
 
     private double alphaValue;
+
+    private PIDFController armController;
+    private static final double kP = 0.0;
+    private static final double kI = 0.0;
+    private static final double kD = 0.0;
+    private static final double kF = 0.0;
+
+
 
 
 
@@ -76,6 +88,10 @@ public class Meet3Code extends LinearOpMode {
         slideLeft.setDirection(DcMotorEx.Direction.REVERSE);
         slideRight.setDirection((DcMotorEx.Direction.FORWARD));
 
+        armRotatorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armRotatorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         resetMotorEncoders();
 
 
@@ -85,8 +101,9 @@ public class Meet3Code extends LinearOpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
         imu.initialize(parameters);
 
-        PIDController armPID = new PIDController(0.01, 0, 0);
-        armPID.setTolerance(20,50);
+        // Initialize the PIDF Controller
+        armController = new PIDFController(kP, kI, kD, kF);
+        armController.setTolerance(5);
 
 
 
@@ -110,7 +127,8 @@ public class Meet3Code extends LinearOpMode {
                // armManual();
             } else {
                 slideControl();
-                armControl();
+                // armControl();
+                armPIDControl();
             }
             telemetry.addData("SlideL", slideLeft.getCurrentPosition());
             telemetry.addData("SlideR", slideRight.getCurrentPosition());
@@ -149,7 +167,7 @@ public class Meet3Code extends LinearOpMode {
     private void slideManual() {
         double powerUp = gamepad2.left_stick_y;
         double powerDown = gamepad2.right_stick_y;
-        if (Math.abs(powerUp) > 0.1 && slideRight.getCurrentPosition() < EXTENDED_SLIDE_TICKS) {
+        if (Math.abs(powerUp) > 0.1 && slideRight.getCurrentPosition() < COLLECT_SLIDE_TICKS) {
             slideRight.setPower(((powerUp - powerDown) * 0.3));
             slideLeft.setPower(((powerUp - powerDown) * 0.3));
         }
@@ -194,6 +212,7 @@ public class Meet3Code extends LinearOpMode {
     private void slideControl() {
         if (gamepad2.a) {
             setSlidePosition((int) EXTENDED_SLIDE_TICKS);
+
         } else if (gamepad2.b) {
             setSlidePosition(0);
         }
@@ -241,20 +260,42 @@ public class Meet3Code extends LinearOpMode {
                 } else {
                     intake.setPower(0.7);
                 }
-            } else {
+            } else if(gamepad1.b){
+                intake.setPower(-0.7);
+            }   else {
                 intake.setPower(0);
-            }
+                }
 
         }
 
             private void armControl () {
                 if (gamepad2.left_bumper) {
                     runToPosition(ARM_SCORE_POSITION);
+                    manual = false;
                 } else if (gamepad2.right_bumper) {
                     runToPosition(ARM_COLLECT_POSITION);
                     manual = true;
                 }
             }
+    private void armPIDControl() {
+        // Example: Use left bumper to go to score position, right bumper for collect position
+        int targetPosition;
+        if (gamepad2.left_bumper) {
+            targetPosition = (int) ARM_SCORE_POSITION;
+        } else if (gamepad2.right_bumper) {
+            targetPosition = (int) ARM_COLLECT_POSITION;
+        } else {
+            targetPosition = 0;
+        }
+
+        armController.setSetPoint(targetPosition);
+
+        double currentPos = (armRotatorLeft.getCurrentPosition() + armRotatorRight.getCurrentPosition()) / 2.0;
+        double output = armController.calculate(currentPos);
+
+        armRotatorLeft.setPower(output);
+        armRotatorRight.setPower(output);
+    }
             private void armManual () {
                 double powerFor = gamepad1.left_trigger;
                 double powerRev = gamepad1.right_trigger;

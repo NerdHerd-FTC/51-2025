@@ -47,10 +47,10 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
         private DcMotorEx armRotatorRight;
 
         public  armControl(HardwareMap hardwareMap) {
-            armRotatorLeft = hardwareMap.get(DcMotorEx.class, "armL");
+            armRotatorLeft = hardwareMap.get(DcMotorEx.class, "armRL");
             armRotatorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             armRotatorRight.setDirection(DcMotorSimple.Direction.REVERSE);
-            armRotatorRight = hardwareMap.get(DcMotorEx.class, "armR");
+            armRotatorRight = hardwareMap.get(DcMotorEx.class, "armRR");
             armRotatorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             armRotatorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         }
@@ -64,8 +64,8 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket packet) {
                 // powers on motor, if it is not on
                 if (!initialized) {
-                    armRotatorLeft.setPower(0.8);
-                    armRotatorRight.setPower(0.8);
+                    armRotatorLeft.setPower(-0.8);
+                    armRotatorRight.setPower(-0.8);
                     initialized = true;
                 }
 
@@ -74,7 +74,7 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
                 double posL = armRotatorLeft.getCurrentPosition();
                 packet.put("armPosR", posR);
                 packet.put("armPosL", posL);
-                if (posR < 100.0 && posL <100) {
+                if (posR > -100.0 && posL > -100) {
                     // true causes the action to rerun
                     return true;
                 } else {
@@ -97,8 +97,8 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket packet) {
                 // powers on motor, if it is not on
                 if (!initialized) {
-                    armRotatorLeft.setPower(-0.8);
-                    armRotatorRight.setPower(-0.8);
+                    armRotatorLeft.setPower(0.8);
+                    armRotatorRight.setPower(0.8);
                     initialized = true;
                 }
 
@@ -107,7 +107,7 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
                 double posL = armRotatorLeft.getCurrentPosition();
                 packet.put("armPosR", posR);
                 packet.put("armPosL", posL);
-                if (posR > 5 && posL > 5) {
+                if (posR < 1200 && posL < 1200) {
                     // true causes the action to rerun
                     return true;
                 } else {
@@ -128,12 +128,12 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
         private DcMotorEx slideRight;
 
         public  slideControl(HardwareMap hardwareMap) {
-            slideLeft = hardwareMap.get(DcMotorEx.class, "armL");
+            slideLeft = hardwareMap.get(DcMotorEx.class, "slideL");
             slideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            slideRight.setDirection(DcMotorSimple.Direction.REVERSE);
-            slideRight = hardwareMap.get(DcMotorEx.class, "armR");
+            slideRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            slideRight = hardwareMap.get(DcMotorEx.class, "slideR");
             slideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            slideLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+            slideLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         }
         public class slideScoreTopBasket implements Action {
             // checks if the lift motor has been powered on

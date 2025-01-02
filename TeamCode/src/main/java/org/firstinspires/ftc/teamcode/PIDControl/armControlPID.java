@@ -33,8 +33,8 @@ public class armControlPID extends OpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        armR = hardwareMap.get(DcMotorEx.class, "armR");
-        armL = hardwareMap.get(DcMotorEx.class, "armL");
+        armR = hardwareMap.get(DcMotorEx.class, "armRR");
+        armL = hardwareMap.get(DcMotorEx.class, "armRL");
     }
 
     @Override
