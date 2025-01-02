@@ -4,6 +4,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -28,7 +29,7 @@ public class Meet3Code extends LinearOpMode {
     private DcMotor armRotatorRight;
     private DcMotor armRotatorLeft;
 
-    private Servo intake;
+    private CRServo intake;
 
     private Servo wrist;
 
@@ -43,9 +44,20 @@ public class Meet3Code extends LinearOpMode {
 
     public static boolean manual = false;
 
+    private ColorSensor colorSensor;
+
+    private double blueValue;
+    private double greenValue;
+    private double redValue;
+
+    private double alphaValue;
+
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
+        colorSensor = hardwareMap.get(ColorSensor.class, "colorV3");
         frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
         backLeftMotor = hardwareMap.dcMotor.get("leftBack");
         frontRightMotor = hardwareMap.dcMotor.get("rightFront");
@@ -54,7 +66,7 @@ public class Meet3Code extends LinearOpMode {
         slideLeft = hardwareMap.dcMotor.get("slideL");
         armRotatorRight = hardwareMap.dcMotor.get("armRR");
         armRotatorLeft = hardwareMap.dcMotor.get("armRL");
-        intake = hardwareMap.servo.get("intake");
+        intake = hardwareMap.crservo.get("intake");
         wrist = hardwareMap.servo.get("wrist");
 
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -104,7 +116,6 @@ public class Meet3Code extends LinearOpMode {
             telemetry.addData("SlideR", slideRight.getCurrentPosition());
             telemetry.addData("armL", armRotatorLeft.getCurrentPosition());
             telemetry.addData("armR", armRotatorRight.getCurrentPosition());
-            telemetry.addData("intake", intake.getPosition());
             telemetry.addData("wrist", wrist.getPosition());
             telemetry.update();
         }
@@ -212,11 +223,28 @@ public class Meet3Code extends LinearOpMode {
     }
 
         private void intakeControl() {
+            blueValue = colorSensor.blue();
+            greenValue = colorSensor.green();
+            redValue = colorSensor.red();
+            alphaValue = colorSensor.alpha();
+            telemetry.addData("redvalue","%.2f", redValue );
+            telemetry.addData("bluevalue","%.2f", blueValue );
+            telemetry.addData("greenvalue","%.2f", greenValue );
+            telemetry.addData("alphavalue","%.2f", alphaValue );
             if (gamepad1.a) {
-                intake.setPosition(0.7);
-            } else if (gamepad1.b) {
-                intake.setPosition(0);
+                if (blueValue > 2500 && greenValue < 1500 && redValue < 1500) {
+                    intake.setPower(0);
+                } else if (blueValue < 2500 && greenValue > 2500 && redValue > 2500) {
+                    intake.setPower(0);
+                } else if (blueValue < 2500 && greenValue < 1500 && redValue > 2500) {
+                    intake.setPower(0.4);
+                } else {
+                    intake.setPower(0.7);
+                }
+            } else {
+                intake.setPower(0);
             }
+
         }
 
             private void armControl () {
