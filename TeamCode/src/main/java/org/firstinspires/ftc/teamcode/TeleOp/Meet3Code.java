@@ -28,7 +28,7 @@ public class Meet3Code extends LinearOpMode {
     private DcMotor armRotatorRight;
     private DcMotor armRotatorLeft;
 
-    private Servo intake;
+    //private Servo intake;
 
     private Servo wrist;
 
@@ -38,7 +38,7 @@ public class Meet3Code extends LinearOpMode {
     private static final double ARM_SCORE_POSITION = -100;
     private static final double ARM_COLLECT_POSITION = 1200;
 
-    private static final double SERVO_POWER_INTAKE = 1.0;
+   // private static final double SERVO_POWER_INTAKE = 1.0;
     private static final double SERVO_POWER_OUT = -0.5;
 
     public static boolean manual = false;
@@ -54,7 +54,7 @@ public class Meet3Code extends LinearOpMode {
         slideLeft = hardwareMap.dcMotor.get("slideL");
         armRotatorRight = hardwareMap.dcMotor.get("armRR");
         armRotatorLeft = hardwareMap.dcMotor.get("armRL");
-        intake = hardwareMap.servo.get("intake");
+        //intake = hardwareMap.servo.get("intake");
         wrist = hardwareMap.servo.get("wrist");
 
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -86,7 +86,7 @@ public class Meet3Code extends LinearOpMode {
 
         while (opModeIsActive()) {
             driveControl();
-            intakeControl();
+            //intakeControl();
             wristControl();
             if (gamepad2.back) {
                 manual = true;
@@ -104,7 +104,7 @@ public class Meet3Code extends LinearOpMode {
             telemetry.addData("SlideR", slideRight.getCurrentPosition());
             telemetry.addData("armL", armRotatorLeft.getCurrentPosition());
             telemetry.addData("armR", armRotatorRight.getCurrentPosition());
-            telemetry.addData("intake", intake.getPosition());
+            //telemetry.addData("intake", intake.getPosition());
             telemetry.addData("wrist", wrist.getPosition());
             telemetry.update();
         }
@@ -211,13 +211,13 @@ public class Meet3Code extends LinearOpMode {
         armRotatorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-        private void intakeControl() {
-            if (gamepad1.a) {
-                intake.setPosition(0.7);
-            } else if (gamepad1.b) {
-                intake.setPosition(0);
-            }
-        }
+//        private void intakeControl() {
+//            if (gamepad1.a) {
+//                intake.setPosition(0.7);
+//            } else if (gamepad1.b) {
+//                intake.setPosition(0);
+//            }
+//        }
 
             private void armControl () {
                 if (gamepad2.left_bumper) {
