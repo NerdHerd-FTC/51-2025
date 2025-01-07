@@ -27,10 +27,10 @@ public class Meet3Code extends LinearOpMode {
     private DcMotor slideRight;
     private IMU imu;
     private DcMotor slideLeft;
-    private DcMotor armRotatorRight;
-    private DcMotor armRotatorLeft;
+    private DcMotorEx armRotatorRight;
+    private DcMotorEx armRotatorLeft;
 
-    private CRServo intake;
+ //   private CRServo intake;
 
     private Servo wrist;
 
@@ -76,9 +76,9 @@ public class Meet3Code extends LinearOpMode {
         backRightMotor = hardwareMap.dcMotor.get("rightBack");
         slideRight = hardwareMap.dcMotor.get("slideR");
         slideLeft = hardwareMap.dcMotor.get("slideL");
-        armRotatorRight = hardwareMap.dcMotor.get("armRR");
-        armRotatorLeft = hardwareMap.dcMotor.get("armRL");
-        intake = hardwareMap.crservo.get("intake");
+        armRotatorRight = (DcMotorEx) hardwareMap.dcMotor.get("armRR");
+        armRotatorLeft = (DcMotorEx) hardwareMap.dcMotor.get("armRL");
+      //  intake = hardwareMap.crservo.get("intake");
         wrist = hardwareMap.servo.get("wrist");
 
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -115,7 +115,7 @@ public class Meet3Code extends LinearOpMode {
 
         while (opModeIsActive()) {
             driveControl();
-            intakeControl();
+          //  intakeControl();
             wristControl();
             if (gamepad2.back) {
                 manual = true;
@@ -241,32 +241,32 @@ public class Meet3Code extends LinearOpMode {
         armRotatorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-        private void intakeControl() {
-            blueValue = colorSensor.blue();
-            greenValue = colorSensor.green();
-            redValue = colorSensor.red();
-            alphaValue = colorSensor.alpha();
-            telemetry.addData("redvalue","%.2f", redValue );
-            telemetry.addData("bluevalue","%.2f", blueValue );
-            telemetry.addData("greenvalue","%.2f", greenValue );
-            telemetry.addData("alphavalue","%.2f", alphaValue );
-            if (gamepad1.a) {
-                if (blueValue > 2500 && greenValue < 1500 && redValue < 1500) {
-                    intake.setPower(0);
-                } else if (blueValue < 2500 && greenValue > 2500 && redValue > 2500) {
-                    intake.setPower(0);
-                } else if (blueValue < 2500 && greenValue < 1500 && redValue > 2500) {
-                    intake.setPower(0.4);
-                } else {
-                    intake.setPower(0.7);
-                }
-            } else if(gamepad1.b){
-                intake.setPower(-0.7);
-            }   else {
-                intake.setPower(0);
-                }
-
-        }
+//        private void intakeControl() {
+//            blueValue = colorSensor.blue();
+//            greenValue = colorSensor.green();
+//            redValue = colorSensor.red();
+//            alphaValue = colorSensor.alpha();
+//            telemetry.addData("redvalue","%.2f", redValue );
+//            telemetry.addData("bluevalue","%.2f", blueValue );
+//            telemetry.addData("greenvalue","%.2f", greenValue );
+//            telemetry.addData("alphavalue","%.2f", alphaValue );
+//            if (gamepad1.a) {
+//                if (blueValue > 2500 && greenValue < 1500 && redValue < 1500) {
+//                    intake.setPower(0);
+//                } else if (blueValue < 2500 && greenValue > 2500 && redValue > 2500) {
+//                    intake.setPower(0);
+//                } else if (blueValue < 2500 && greenValue < 1500 && redValue > 2500) {
+//                    intake.setPower(0.4);
+//                } else {
+//                    intake.setPower(0.7);
+//                }
+//            } else if(gamepad1.b){
+//                intake.setPower(-0.7);
+//            }   else {
+//                intake.setPower(0);
+//                }
+//
+//        }
 
             private void armControl () {
                 if (gamepad2.left_bumper) {
@@ -293,8 +293,8 @@ public class Meet3Code extends LinearOpMode {
         double currentPos = (armRotatorLeft.getCurrentPosition() + armRotatorRight.getCurrentPosition()) / 2.0;
         double output = armController.calculate(currentPos);
 
-        armRotatorLeft.setPower(output);
-        armRotatorRight.setPower(output);
+        armRotatorLeft.setVelocity(output);
+        armRotatorRight.setVelocity(output);
     }
             private void armManual () {
                 double powerFor = gamepad1.left_trigger;

@@ -58,7 +58,7 @@ public class ColorSensingTest extends LinearOpMode {
                   intake.setPower(1);
               }
           } else if(gamepad1.b){
-              intake.setPower(-0.7);
+              intake.setPower(-1);
           }   else {
               intake.setPower(0);
           }
