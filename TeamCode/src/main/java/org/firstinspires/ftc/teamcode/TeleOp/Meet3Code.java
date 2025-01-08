@@ -32,13 +32,13 @@ public class Meet3Code extends LinearOpMode {
 
  //   private CRServo intake;
 
-    private Servo wrist;
+  //  private Servo wrist;
 
 
     private static final double TICKS_PER_DEGREE = 537.7 / 360;
-    private static final double EXTENDED_SLIDE_TICKS = - 2000;
+    private static final double EXTENDED_SLIDE_TICKS =  2000;
 
-    private static final double COLLECT_SLIDE_TICKS = - 810;
+    private static final double COLLECT_SLIDE_TICKS =  810;
 
     private static final double ARM_SCORE_POSITION = -625;
     private static final double ARM_COLLECT_POSITION = 950;
@@ -47,6 +47,7 @@ public class Meet3Code extends LinearOpMode {
     private static final double SERVO_POWER_OUT = -0.5;
 
     public static boolean manual = false;
+
 
     private ColorSensor colorSensor;
 
@@ -57,7 +58,7 @@ public class Meet3Code extends LinearOpMode {
     private double alphaValue;
 
     private PIDFController armController;
-    private static final double kP = 0.0;
+    private static final double kP = 0.0001;
     private static final double kI = 0.0;
     private static final double kD = 0.0;
     private static final double kF = 0.0;
@@ -79,14 +80,14 @@ public class Meet3Code extends LinearOpMode {
         armRotatorRight = (DcMotorEx) hardwareMap.dcMotor.get("armRR");
         armRotatorLeft = (DcMotorEx) hardwareMap.dcMotor.get("armRL");
       //  intake = hardwareMap.crservo.get("intake");
-        wrist = hardwareMap.servo.get("wrist");
+     //   wrist = hardwareMap.servo.get("wrist");
 
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         armRotatorRight.setDirection(DcMotorSimple.Direction.REVERSE);
         armRotatorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        slideLeft.setDirection(DcMotorEx.Direction.REVERSE);
-        slideRight.setDirection((DcMotorEx.Direction.FORWARD));
+        slideLeft.setDirection(DcMotorEx.Direction.FORWARD);
+        slideRight.setDirection((DcMotorEx.Direction.REVERSE));
 
         armRotatorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armRotatorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -103,7 +104,7 @@ public class Meet3Code extends LinearOpMode {
 
         // Initialize the PIDF Controller
         armController = new PIDFController(kP, kI, kD, kF);
-        armController.setTolerance(5);
+        armController.setTolerance(5, 10);
 
 
 
@@ -116,7 +117,7 @@ public class Meet3Code extends LinearOpMode {
         while (opModeIsActive()) {
             driveControl();
           //  intakeControl();
-            wristControl();
+          //  wristControl();
             if (gamepad2.back) {
                 manual = true;
             } else if (gamepad2.dpad_up) {
@@ -134,7 +135,7 @@ public class Meet3Code extends LinearOpMode {
             telemetry.addData("SlideR", slideRight.getCurrentPosition());
             telemetry.addData("armL", armRotatorLeft.getCurrentPosition());
             telemetry.addData("armR", armRotatorRight.getCurrentPosition());
-            telemetry.addData("wrist", wrist.getPosition());
+           // telemetry.addData("wrist", wrist.getPosition());
             telemetry.update();
         }
     }
@@ -176,8 +177,8 @@ public class Meet3Code extends LinearOpMode {
 
     private void driveControl() {
         double y = -gamepad1.left_stick_y;
-        double x = gamepad1.right_stick_x;
-        double rx = gamepad1.left_stick_x;
+        double rx = gamepad1.right_stick_x;
+        double x = gamepad1.left_stick_x;
 
         if (gamepad1.start) {
             imu.resetYaw();
@@ -230,16 +231,16 @@ public class Meet3Code extends LinearOpMode {
         slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    private void runToPosition(double targetPosition) {
-        int newTarget = (int) (TICKS_PER_DEGREE * targetPosition);
-        armRotatorLeft.setTargetPosition(newTarget);
-        armRotatorLeft.setPower(0.5);
-        armRotatorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        armRotatorRight.setTargetPosition(newTarget);
-        armRotatorRight.setPower(0.5);
-        armRotatorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
+//    private void runToPosition(double targetPosition) {
+//        int newTarget = (int) (TICKS_PER_DEGREE * targetPosition);
+//        armRotatorLeft.setTargetPosition(newTarget);
+//        armRotatorLeft.setPower(0.5);
+//        armRotatorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//        armRotatorRight.setTargetPosition(newTarget);
+//        armRotatorRight.setPower(0.5);
+//        armRotatorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//    }
 
 //        private void intakeControl() {
 //            blueValue = colorSensor.blue();
@@ -268,24 +269,22 @@ public class Meet3Code extends LinearOpMode {
 //
 //        }
 
-            private void armControl () {
-                if (gamepad2.left_bumper) {
-                    runToPosition(ARM_SCORE_POSITION);
-                    manual = false;
-                } else if (gamepad2.right_bumper) {
-                    runToPosition(ARM_COLLECT_POSITION);
-                    manual = true;
-                }
-            }
+//            private void armControl () {
+//                if (gamepad2.left_bumper) {
+//                    runToPosition(ARM_SCORE_POSITION);
+//                    manual = false;
+//                } else if (gamepad2.right_bumper) {
+//                    runToPosition(ARM_COLLECT_POSITION);
+//                    manual = true;
+//                }
+//            }
     private void armPIDControl() {
         // Example: Use left bumper to go to score position, right bumper for collect position
-        int targetPosition;
+        int targetPosition = 0;
         if (gamepad2.left_bumper) {
             targetPosition = (int) ARM_SCORE_POSITION;
         } else if (gamepad2.right_bumper) {
             targetPosition = (int) ARM_COLLECT_POSITION;
-        } else {
-            targetPosition = 0;
         }
 
         armController.setSetPoint(targetPosition);
@@ -304,13 +303,13 @@ public class Meet3Code extends LinearOpMode {
                     armRotatorRight.setPower((powerFor - powerRev) * 0.3);
                 }
             }
-            private void wristControl () {
-                if (gamepad1.right_bumper) {
-                    wrist.setPosition(0.6);
-                } else if (gamepad1.left_bumper) {
-                    wrist.setPosition(0.7);
-                }
-            }
+//            private void wristControl () {
+//                if (gamepad1.right_bumper) {
+//                    wrist.setPosition(0.6);
+//                } else if (gamepad1.left_bumper) {
+//                    wrist.setPosition(0.7);
+//                }
+//            }
 
     }
 
