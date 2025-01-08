@@ -197,7 +197,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;((DcMotor
 
 } */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -210,8 +210,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 @TeleOp(name = "aaditesting")
 public class Meet0Code extends LinearOpMode {
     public CRServo servo;
+    double ticks = 284.5;
+    double newTarget;
 
-    final double ARM_TICKS_PER_DEGREE = 28 * 250047.0 / 4913.0 * 100.0 / 20.0 / 360.0;
+    final double ARM_TICKS_PER_DEGREE = ticks/360;
     final double ARM_SCORE_LOW_BASKET = 180 * ARM_TICKS_PER_DEGREE;
     final double ARM_COLLECT = 250 * ARM_TICKS_PER_DEGREE;
     final double FUDGE_FACTOR = 15 * ARM_TICKS_PER_DEGREE;
@@ -228,10 +230,11 @@ public class Meet0Code extends LinearOpMode {
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRight");
         DcMotor backRightMotor = hardwareMap.dcMotor.get("backRight");
         DcMotor armMotor = hardwareMap.dcMotor.get("armMotor");
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         servo = hardwareMap.get(CRServo.class, "intake");
 
         // Reverse the right side motors
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -277,4 +280,4 @@ public class Meet0Code extends LinearOpMode {
 
         }
     }
-    }
+}
