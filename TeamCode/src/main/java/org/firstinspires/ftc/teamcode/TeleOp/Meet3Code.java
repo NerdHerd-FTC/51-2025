@@ -57,11 +57,13 @@ public class Meet3Code extends LinearOpMode {
 
     private double alphaValue;
 
-    private PIDFController armController;
-    private static final double kP = 0.0001;
-    private static final double kI = 0.0;
-    private static final double kD = 0.0;
-    private static final double kF = 0.0;
+    private PIDController controller;
+    public static double p = 0.005, i = 0.0008, d = 0.0002;
+    public static double f = 0.0001;
+
+    public static int target = 0;
+
+    private final double tick_per_degree = 537.7/360;
 
 
 
@@ -70,6 +72,7 @@ public class Meet3Code extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        controller = new PIDController(p, i, d);
         colorSensor = hardwareMap.get(ColorSensor.class, "colorV3");
         frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
         backLeftMotor = hardwareMap.dcMotor.get("leftBack");
@@ -102,11 +105,9 @@ public class Meet3Code extends LinearOpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
         imu.initialize(parameters);
 
-        // Initialize the PIDF Controller
-        armController = new PIDFController(kP, kI, kD, kF);
-        armController.setTolerance(5, 10);
 
 
+        controller = new PIDController(p, i, d);
 
 
 
@@ -279,21 +280,25 @@ public class Meet3Code extends LinearOpMode {
 //                }
 //            }
     private void armPIDControl() {
-        // Example: Use left bumper to go to score position, right bumper for collect position
-        int targetPosition = 0;
-        if (gamepad2.left_bumper) {
-            targetPosition = (int) ARM_SCORE_POSITION;
-        } else if (gamepad2.right_bumper) {
-            targetPosition = (int) ARM_COLLECT_POSITION;
+        int armRPos = armRotatorRight.getCurrentPosition();
+        int armLPos = armRotatorLeft.getCurrentPosition();
+
+        double pid = controller.calculate(armRPos, target);
+
+        double ff = Math.cos(Math.toRadians(target / tick_per_degree)) * f;
+
+        double power = pid + ff;
+        if(gamepad1.b) {
+            target = -500;
+        } else if (gamepad1.a) {
+            target = 1000;
         }
-
-        armController.setSetPoint(targetPosition);
-
-        double currentPos = (armRotatorLeft.getCurrentPosition() + armRotatorRight.getCurrentPosition()) / 2.0;
-        double output = armController.calculate(currentPos);
-
-        armRotatorLeft.setVelocity(output);
-        armRotatorRight.setVelocity(output);
+        armRotatorLeft.setPower(power);
+        armRotatorRight.setPower(power);
+        telemetry.addData("posR", armRPos);
+        telemetry.addData("posL", armLPos);
+        telemetry.addData("target", target);
+        telemetry.update();
     }
             private void armManual () {
                 double powerFor = gamepad1.left_trigger;
