@@ -1,23 +1,22 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.arcrobotics.ftclib.controller.PIDController;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 
-@TeleOp(name = "MeetThreeTestingCode")
+@TeleOp(name = "ArmControlTest2")
 @Config
-public class Meet3Code extends LinearOpMode {
+public class ArmControlTest extends LinearOpMode {
     private DcMotor frontLeftMotor;
     private DcMotor backLeftMotor;
     private DcMotor frontRightMotor;
@@ -34,7 +33,7 @@ public class Meet3Code extends LinearOpMode {
 
 
     private static final double TICKS_PER_DEGREE = 537.7 / 360;
-    private static final double EXTENDED_SLIDE_TICKS = - 810;
+    private static final double EXTENDED_SLIDE_TICKS = -810;
     private static final double ARM_SCORE_POSITION = -100;
     private static final double ARM_COLLECT_POSITION = 1200;
 
@@ -88,15 +87,18 @@ public class Meet3Code extends LinearOpMode {
             driveControl();
             intakeControl();
             wristControl();
+
             if (gamepad2.back) {
-                manual = true;
-            } else if (gamepad2.dpad_up) {
-                manual = false;
+                manual = !manual;
             }
+
             if (manual) {
+                telemetry.addData("Manual Mode", slideLeft.getCurrentPosition());
                 slideManual();
-                // armManual();
+                armManual();
+
             } else {
+                telemetry.addData("Auto Mode", slideLeft.getCurrentPosition());
                 slideControl();
                 armControl();
             }
@@ -227,13 +229,16 @@ public class Meet3Code extends LinearOpMode {
         }
     }
     private void armManual () {
-        double powerFor = gamepad1.left_trigger;
-        double powerRev = gamepad1.right_trigger;
-        if (Math.abs(powerFor) > 0.1 && armRotatorLeft.getCurrentPosition() < ARM_SCORE_POSITION && armRotatorRight.getCurrentPosition() < ARM_SCORE_POSITION) {
-            armRotatorLeft.setPower((powerFor - powerRev) * 0.3);
-            armRotatorRight.setPower((powerFor - powerRev) * 0.3);
-        }
+//        double powerFor = gamepad2.left_trigger;
+//        double powerRev = gamepad2.right_trigger;
+//        if (Math.abs(powerFor) > 0.1 && armRotatorLeft.getCurrentPosition() < ARM_SCORE_POSITION && armRotatorRight.getCurrentPosition() < ARM_SCORE_POSITION) {
+//            armRotatorLeft.setPower((powerFor - powerRev) * 0.3);
+//            armRotatorRight.setPower((powerFor - powerRev) * 0.3);
+//        }
+        armRotatorRight.setPower(gamepad2.right_stick_y * 0.3);
+        armRotatorLeft.setPower(gamepad2.right_stick_y * 0.3);
     }
+
     private void wristControl () {
         if (gamepad1.right_bumper) {
             wrist.setPosition(0.6);
