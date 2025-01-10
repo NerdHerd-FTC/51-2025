@@ -40,13 +40,15 @@ public class Meet3Code extends LinearOpMode {
 
     private static final double COLLECT_SLIDE_TICKS =  810;
 
-    private static final double ARM_SCORE_POSITION = -625;
-    private static final double ARM_COLLECT_POSITION = 950;
+    private static final double ARM_SCORE_POSITION = -500;
+    private static final double ARM_COLLECT_POSITION = 1000;
 
     private static final double SERVO_POWER_INTAKE = 1.0;
     private static final double SERVO_POWER_OUT = -0.5;
 
     public static boolean manual = false;
+
+    public int targetPosition;
 
 
     private ColorSensor colorSensor;
@@ -119,14 +121,15 @@ public class Meet3Code extends LinearOpMode {
             driveControl();
           //  intakeControl();
           //  wristControl();
-            if (gamepad2.back) {
-                manual = true;
-            } else if (gamepad2.dpad_up) {
-                manual = false;
-            }
+//            if (gamepad2.back) {
+//                manual = true;
+//            } else if (gamepad2.dpad_up) {
+//                manual = false;
+//            }
             if (manual) {
                 slideManual();
                // armManual();
+                armPIDControl();
             } else {
                 slideControl();
                 // armControl();
@@ -167,12 +170,43 @@ public class Meet3Code extends LinearOpMode {
 
 
     private void slideManual() {
-        double powerUp = gamepad2.left_stick_y;
-        double powerDown = gamepad2.right_stick_y;
-        if (Math.abs(powerUp) > 0.1 && slideRight.getCurrentPosition() < COLLECT_SLIDE_TICKS) {
-            slideRight.setPower(((powerUp - powerDown) * 0.3));
-            slideLeft.setPower(((powerUp - powerDown) * 0.3));
+        if(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810 && slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5 ){
+            if(gamepad2.a) {
+                targetPosition = targetPosition + 30;
+
+            } else if (gamepad2.b) {
+                targetPosition = targetPosition - 30;
+            } else {
+                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
+            }
+        } else if(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810 && !(slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5)) {
+            if (gamepad2.b) {
+                targetPosition = targetPosition - 30;
+            } else {
+                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
+            }
+            if (gamepad2.a) {
+                targetPosition = targetPosition + 30;
+            } else {
+                targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
+            }
+        } else if(!(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810) && slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5) {
+            if (gamepad2.b) {
+                targetPosition = targetPosition - 30;
+            } else {
+                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
+            }
+        }   else {
+            targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
         }
+
+        slideRight.setPower(0.5);
+        slideRight.setTargetPosition(targetPosition);
+        slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        slideLeft.setPower(0.5);
+        slideLeft.setTargetPosition(targetPosition);
+        slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 
@@ -216,7 +250,7 @@ public class Meet3Code extends LinearOpMode {
             setSlidePosition((int) EXTENDED_SLIDE_TICKS);
 
         } else if (gamepad2.b) {
-            setSlidePosition(0);
+            setSlidePosition(10);
         }
     }
 
@@ -288,10 +322,12 @@ public class Meet3Code extends LinearOpMode {
         double ff = Math.cos(Math.toRadians(target / tick_per_degree)) * f;
 
         double power = pid + ff;
-        if(gamepad1.b) {
+        if(gamepad2.left_bumper) {
             target = -500;
-        } else if (gamepad1.a) {
+            manual = false;
+        } else if (gamepad2.right_bumper) {
             target = 1000;
+            manual = true;
         }
         armRotatorLeft.setPower(power);
         armRotatorRight.setPower(power);
