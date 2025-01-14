@@ -127,7 +127,7 @@ public class Meet3Code extends LinearOpMode {
 //                manual = false;
 //            }
 
-            slideManual();
+            slideManual(determineCondition());
             // armManual();
 
             // armControl();
@@ -167,35 +167,44 @@ public class Meet3Code extends LinearOpMode {
     }
 
 
-    private void slideManual() {
-        if(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810 && slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5 ){
-            if(gamepad2.a) {
-                targetPosition = targetPosition + 30;
+    private void slideManual(int operation) {
+        switch(operation){
+            case 1:
+                if(gamepad2.a) {
+                    targetPosition += 30;
 
-            } else if (gamepad2.b) {
-                targetPosition = targetPosition - 30;
-            } else {
-                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
-            }
-        } else if(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810 && !(slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5)) {
-            if (gamepad2.b) {
-                targetPosition = targetPosition - 30;
-            } else {
-                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
-            }
-            if (gamepad2.a) {
-                targetPosition = targetPosition + 30;
-            } else {
+                } else if (gamepad2.b) {
+                    targetPosition -= 30;
+                } else {
+                    targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
+                }
+                break;
+
+            case 2:
+                if (gamepad2.b) {
+                    targetPosition = targetPosition - 30;
+                } else {
+                    targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
+                }
+                if (gamepad2.a) {
+                    targetPosition = targetPosition + 30;
+                } else {
+                    targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
+                }
+                break;
+
+            case 3:
+                if (gamepad2.b) {
+                    targetPosition = targetPosition - 30;
+                } else {
+                    targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
+                }
+                break;
+
+            default:
                 targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
-            }
-        } else if(!(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810) && slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5) {
-            if (gamepad2.b) {
-                targetPosition = targetPosition - 30;
-            } else {
-                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
-            }
-        }   else {
-            targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
+                break;
+
         }
         if (gamepad2.x) {
             targetPosition = (int) EXTENDED_SLIDE_TICKS;
@@ -203,7 +212,42 @@ public class Meet3Code extends LinearOpMode {
         } else if (gamepad2.y) {
             targetPosition = 10;
         }
-
+//
+//        if(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810 && slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5 ){
+//            if(gamepad2.a) {
+//                targetPosition = targetPosition + 30;
+//
+//            } else if (gamepad2.b) {
+//                targetPosition = targetPosition - 30;
+//            } else {
+//                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
+//            }
+//        } else if(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810 && !(slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5)) {
+//            if (gamepad2.b) {
+//                targetPosition = targetPosition - 30;
+//            } else {
+//                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
+//            }
+//            if (gamepad2.a) {
+//                targetPosition = targetPosition + 30;
+//            } else {
+//                targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
+//            }
+//        } else if(!(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810) && slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5) {
+//            if (gamepad2.b) {
+//                targetPosition = targetPosition - 30;
+//            } else {
+//                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
+//            }
+//        }   else {
+//            targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
+//        }
+//        if (gamepad2.x) {
+//            targetPosition = (int) EXTENDED_SLIDE_TICKS;
+//
+//        } else if (gamepad2.y) {
+//            targetPosition = 10;
+//        }
         slideRight.setPower(0.5);
         slideRight.setTargetPosition(targetPosition);
         slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -211,6 +255,21 @@ public class Meet3Code extends LinearOpMode {
         slideLeft.setPower(0.5);
         slideLeft.setTargetPosition(targetPosition);
         slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    private int determineCondition() {
+        boolean inRangePositive = slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() < 810;
+        boolean inRangeNegative = slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5;
+
+        if (inRangePositive && inRangeNegative) {
+            return 1;
+        } else if (inRangePositive && !inRangeNegative) {
+            return 2;
+        } else if (!inRangePositive && inRangeNegative) {
+            return 3;
+        } else {
+            return 0;
+        }
     }
 
 
