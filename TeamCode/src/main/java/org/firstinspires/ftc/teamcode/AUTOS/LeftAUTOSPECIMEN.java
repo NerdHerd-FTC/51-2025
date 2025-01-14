@@ -53,6 +53,7 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
             armRotatorRight = hardwareMap.get(DcMotorEx.class, "armRR");
             armRotatorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             armRotatorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+
         }
 
         public class armScoreBasket implements Action {
@@ -74,7 +75,7 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
                 double posL = armRotatorLeft.getCurrentPosition();
                 packet.put("armPosR", posR);
                 packet.put("armPosL", posL);
-                if (posR > -100.0 && posL > -100) {
+                if (posR > -300.0 && posL > -300) {
                     // true causes the action to rerun
                     return true;
                 } else {
@@ -154,7 +155,7 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
                 double posL = slideLeft.getCurrentPosition();
                 packet.put("slidePosR", posR);
                 packet.put("slidePosL", posL);
-                if (posR < 100.0 && posL <100) {
+                if (posR < 2000.0 && posL <2000) {
                     // true causes the action to rerun
                     return true;
                 } else {
@@ -164,6 +165,9 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
                     return false;
                 }
             }
+        }
+        public Action SlideRaise() {
+            return new slideControl.slideScoreTopBasket();
         }
         public class slideLower implements Action {
             // checks if the lift motor has been powered on
@@ -184,7 +188,7 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
                 double posL = slideLeft.getCurrentPosition();
                 packet.put("slidePosR", posR);
                 packet.put("slidePosL", posL);
-                if (posR > 100.0 && posL >100) {
+                if (posR > 10 && posL >10) {
                     // true causes the action to rerun
                     return true;
                 } else {

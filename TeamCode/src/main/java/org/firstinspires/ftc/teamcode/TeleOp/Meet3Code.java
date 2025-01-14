@@ -126,15 +126,13 @@ public class Meet3Code extends LinearOpMode {
 //            } else if (gamepad2.dpad_up) {
 //                manual = false;
 //            }
-            if (manual) {
+
                 slideManual();
                // armManual();
-                armPIDControl();
-            } else {
-                slideControl();
+
                 // armControl();
                 armPIDControl();
-            }
+
             telemetry.addData("SlideL", slideLeft.getCurrentPosition());
             telemetry.addData("SlideR", slideRight.getCurrentPosition());
             telemetry.addData("armL", armRotatorLeft.getCurrentPosition());
@@ -199,6 +197,12 @@ public class Meet3Code extends LinearOpMode {
         }   else {
             targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
         }
+        if (gamepad2.x) {
+            targetPosition = (int) EXTENDED_SLIDE_TICKS;
+
+        } else if (gamepad2.y) {
+            targetPosition = 10;
+        }
 
         slideRight.setPower(0.5);
         slideRight.setTargetPosition(targetPosition);
@@ -247,15 +251,15 @@ public class Meet3Code extends LinearOpMode {
 
     private void slideControl() {
         if (gamepad2.a) {
-            setSlidePosition((int) EXTENDED_SLIDE_TICKS);
+            targetPosition = (int) EXTENDED_SLIDE_TICKS;
 
         } else if (gamepad2.b) {
-            setSlidePosition(10);
+            targetPosition = 10;
         }
     }
 
 
-    private void setSlidePosition(int targetPosition) {
+    private void setSlidePosition() {
         slideRight.setPower(0.5);
         slideRight.setTargetPosition(targetPosition);
 
