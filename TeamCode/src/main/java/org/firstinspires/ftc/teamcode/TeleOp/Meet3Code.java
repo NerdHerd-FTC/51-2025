@@ -71,7 +71,6 @@ public class Meet3Code extends LinearOpMode {
 
 
 
-
     @Override
     public void runOpMode() throws InterruptedException {
         controller = new PIDController(p, i, d);
@@ -153,7 +152,6 @@ public class Meet3Code extends LinearOpMode {
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
 
         slideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
