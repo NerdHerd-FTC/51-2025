@@ -30,9 +30,9 @@ public class Meet3Code extends LinearOpMode {
     private DcMotorEx armRotatorRight;
     private DcMotorEx armRotatorLeft;
 
-    //   private CRServo intake;
+    private Servo intake;
 
-    //  private Servo wrist;
+   private Servo wrist;
 
 
     private static final double TICKS_PER_DEGREE = 537.7 / 360;
@@ -71,7 +71,6 @@ public class Meet3Code extends LinearOpMode {
 
 
 
-
     @Override
     public void runOpMode() throws InterruptedException {
         controller = new PIDController(p, i, d);
@@ -84,8 +83,8 @@ public class Meet3Code extends LinearOpMode {
         slideLeft = hardwareMap.dcMotor.get("slideL");
         armRotatorRight = (DcMotorEx) hardwareMap.dcMotor.get("armRR");
         armRotatorLeft = (DcMotorEx) hardwareMap.dcMotor.get("armRL");
-        //  intake = hardwareMap.crservo.get("intake");
-        //   wrist = hardwareMap.servo.get("wrist");
+        intake = hardwareMap.servo.get("intake");
+        wrist = hardwareMap.servo.get("wrist");
 
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -98,7 +97,16 @@ public class Meet3Code extends LinearOpMode {
         armRotatorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intake.setDirection(Servo.Direction.REVERSE);
         resetMotorEncoders();
+        int armRPos = armRotatorRight.getCurrentPosition();
+        int armLPos = armRotatorLeft.getCurrentPosition();
+        telemetry.addData("posR", armRPos);
+        telemetry.addData("posL", armLPos);
+
+
+
+        telemetry.update();
 
 
         imu = hardwareMap.get(IMU.class, "imu");
@@ -119,26 +127,31 @@ public class Meet3Code extends LinearOpMode {
 
         while (opModeIsActive()) {
             driveControl();
-            //  intakeControl();
-            //  wristControl();
+            intakeControl();
+            wristControl();
+
+
 //            if (gamepad2.back) {
 //                manual = true;
 //            } else if (gamepad2.dpad_up) {
 //                manual = false;
 //            }
 
-            slideManual(determineCondition());
-            // armManual();
+                slideManual();
+               // armManual();
 
-            // armControl();
-            armPIDControl();
+                // armControl();
+                armPIDControl();
 
             telemetry.addData("SlideL", slideLeft.getCurrentPosition());
             telemetry.addData("SlideR", slideRight.getCurrentPosition());
             telemetry.addData("armL", armRotatorLeft.getCurrentPosition());
             telemetry.addData("armR", armRotatorRight.getCurrentPosition());
-            // telemetry.addData("wrist", wrist.getPosition());
-            telemetry.update();
+            double  wristPos = wrist.getPosition();
+            double  intakePos = intake.getPosition();
+            telemetry.addData("inPos", intakePos);
+            telemetry.addData("wristPos", wristPos);
+
         }
     }
 
@@ -154,7 +167,6 @@ public class Meet3Code extends LinearOpMode {
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
         slideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armRotatorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -167,87 +179,49 @@ public class Meet3Code extends LinearOpMode {
     }
 
 
-    private void slideManual(int operation) {
-        switch(operation){
-            case 1:
-                if(gamepad2.a) {
-                    targetPosition += 30;
+    private void slideManual() {
+        if(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810 && slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5 ){
+            if(gamepad2.a) {
+                targetPosition = targetPosition + 30;
 
-                } else if (gamepad2.b) {
-                    targetPosition -= 30;
-                } else {
-                    targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
-                }
-                break;
-
-            case 2:
-                if (gamepad2.b) {
-                    targetPosition = targetPosition - 30;
-                } else {
-                    targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
-                }
-                if (gamepad2.a) {
-                    targetPosition = targetPosition + 30;
-                } else {
-                    targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
-                }
-                break;
-
-            case 3:
-                if (gamepad2.b) {
-                    targetPosition = targetPosition - 30;
-                } else {
-                    targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
-                }
-                break;
-
-            default:
+            } else if (gamepad2.b) {
+                targetPosition = targetPosition - 30;
+            } else {
+                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
+            }
+        } else if(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810 && !(slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5)) {
+            if (gamepad2.b) {
+                targetPosition = targetPosition - 30;
+            } else {
+                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
+            }
+            if (gamepad2.a) {
+                targetPosition = targetPosition + 30;
+            } else {
                 targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
-                break;
-
+            }
+        } else if(!(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810) && slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5) {
+            if (gamepad2.b) {
+                targetPosition = targetPosition - 30;
+            } else {
+                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
+            }
+        }   else {
+            targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
         }
         if (gamepad2.x) {
+
+            slideLeft.setPower(0.5);
             targetPosition = (int) EXTENDED_SLIDE_TICKS;
+            slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         } else if (gamepad2.y) {
+
+            slideLeft.setPower(0.5);
             targetPosition = 10;
+            slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
-//
-//        if(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810 && slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5 ){
-//            if(gamepad2.a) {
-//                targetPosition = targetPosition + 30;
-//
-//            } else if (gamepad2.b) {
-//                targetPosition = targetPosition - 30;
-//            } else {
-//                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
-//            }
-//        } else if(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810 && !(slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5)) {
-//            if (gamepad2.b) {
-//                targetPosition = targetPosition - 30;
-//            } else {
-//                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
-//            }
-//            if (gamepad2.a) {
-//                targetPosition = targetPosition + 30;
-//            } else {
-//                targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
-//            }
-//        } else if(!(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810) && slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5) {
-//            if (gamepad2.b) {
-//                targetPosition = targetPosition - 30;
-//            } else {
-//                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
-//            }
-//        }   else {
-//            targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
-//        }
-//        if (gamepad2.x) {
-//            targetPosition = (int) EXTENDED_SLIDE_TICKS;
-//
-//        } else if (gamepad2.y) {
-//            targetPosition = 10;
-//        }
+
         slideRight.setPower(0.5);
         slideRight.setTargetPosition(targetPosition);
         slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -255,21 +229,6 @@ public class Meet3Code extends LinearOpMode {
         slideLeft.setPower(0.5);
         slideLeft.setTargetPosition(targetPosition);
         slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
-
-    private int determineCondition() {
-        boolean inRangePositive = slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() < 810;
-        boolean inRangeNegative = slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5;
-
-        if (inRangePositive && inRangeNegative) {
-            return 1;
-        } else if (inRangePositive && !inRangeNegative) {
-            return 2;
-        } else if (!inRangePositive && inRangeNegative) {
-            return 3;
-        } else {
-            return 0;
-        }
     }
 
 
@@ -340,7 +299,7 @@ public class Meet3Code extends LinearOpMode {
 //        armRotatorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //    }
 
-//        private void intakeControl() {
+     private void intakeControl() {
 //            blueValue = colorSensor.blue();
 //            greenValue = colorSensor.green();
 //            redValue = colorSensor.red();
@@ -364,10 +323,15 @@ public class Meet3Code extends LinearOpMode {
 //            }   else {
 //                intake.setPower(0);
 //                }
+         if(gamepad1.a) {
+             intake.setPosition(0.005);
+         } else if (gamepad1.b) {
+             intake.setPosition(0.01);
+         }
 //
-//        }
+       }
 
-    //            private void armControl () {
+//            private void armControl () {
 //                if (gamepad2.left_bumper) {
 //                    runToPosition(ARM_SCORE_POSITION);
 //                    manual = false;
@@ -399,23 +363,23 @@ public class Meet3Code extends LinearOpMode {
         telemetry.addData("target", target);
         telemetry.update();
     }
-    private void armManual () {
-        double powerFor = gamepad1.left_trigger;
-        double powerRev = gamepad1.right_trigger;
-        if (Math.abs(powerFor) > 0.1 && armRotatorLeft.getCurrentPosition() < ARM_SCORE_POSITION && armRotatorRight.getCurrentPosition() < ARM_SCORE_POSITION) {
-            armRotatorLeft.setPower((powerFor - powerRev) * 0.3);
-            armRotatorRight.setPower((powerFor - powerRev) * 0.3);
-        }
-    }
-//            private void wristControl () {
-//                if (gamepad1.right_bumper) {
-//                    wrist.setPosition(0.6);
-//                } else if (gamepad1.left_bumper) {
-//                    wrist.setPosition(0.7);
-//                }
-//            }
+            private void armManual () {
+                double powerFor = gamepad1.left_trigger;
+                double powerRev = gamepad1.right_trigger;
+                if (Math.abs(powerFor) > 0.1 && armRotatorLeft.getCurrentPosition() < ARM_SCORE_POSITION && armRotatorRight.getCurrentPosition() < ARM_SCORE_POSITION) {
+                    armRotatorLeft.setPower((powerFor - powerRev) * 0.3);
+                    armRotatorRight.setPower((powerFor - powerRev) * 0.3);
+                }
+            }
+            private void wristControl () {
+                if (gamepad1.right_bumper) {
+                    wrist.setPosition(0.5);
+                } else if (gamepad1.left_bumper) {
+                    wrist.setPosition(0);
+                }
+            }
 
-}
+    }
 
 
 
