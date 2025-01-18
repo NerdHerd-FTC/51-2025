@@ -36,12 +36,12 @@ public class Meet3Code extends LinearOpMode {
 
 
     private static final double TICKS_PER_DEGREE = 537.7 / 360;
-    private static final double EXTENDED_SLIDE_TICKS =  2100;
+    private static final double EXTENDED_SLIDE_TICKS =  2450;
 
     private static final double COLLECT_SLIDE_TICKS =  810;
 
     private static final double ARM_SCORE_POSITION = -500;
-    private static final double ARM_COLLECT_POSITION = 1000;
+    private static final double ARM_COLLECT_POSITION = 985;
 
     private static final double SERVO_POWER_INTAKE = 1.0;
     private static final double SERVO_POWER_OUT = -0.5;
@@ -211,22 +211,26 @@ public class Meet3Code extends LinearOpMode {
         }
         if (gamepad2.x) {
 
-            slideLeft.setPower(0.5);
+            slideLeft.setPower(0.75);
+            slideRight.setPower(0.75);
             targetPosition = (int) EXTENDED_SLIDE_TICKS;
             slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         } else if (gamepad2.y) {
 
-            slideLeft.setPower(0.5);
+            slideLeft.setPower(0.75);
+            slideRight.setPower(0.75);
             targetPosition = 10;
             slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
-        slideRight.setPower(0.5);
+        slideRight.setPower(0.75);
         slideRight.setTargetPosition(targetPosition);
         slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideLeft.setPower(0.5);
+        slideLeft.setPower(0.75);
         slideLeft.setTargetPosition(targetPosition);
         slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
@@ -278,11 +282,11 @@ public class Meet3Code extends LinearOpMode {
 
 
     private void setSlidePosition() {
-        slideRight.setPower(0.5);
+        slideRight.setPower(0.75);
         slideRight.setTargetPosition(targetPosition);
 
         slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideLeft.setPower(0.5);
+        slideLeft.setPower(0.75);
         slideLeft.setTargetPosition(targetPosition);
 
         slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -355,7 +359,17 @@ public class Meet3Code extends LinearOpMode {
         } else if (gamepad2.right_bumper) {
             target = 1000;
             manual = true;
+        } else if (gamepad2.dpad_up) {
+            target = target +8;
+        } else if (gamepad2.dpad_down) {
+            target = target -8;
+        } else if (gamepad2.dpad_right) {
+            target = target + 25;
+        }  else if (gamepad2.dpad_left) {
+            target = target - 25;
         }
+
+
         armRotatorLeft.setPower(power);
         armRotatorRight.setPower(power);
         telemetry.addData("posR", armRPos);
@@ -373,7 +387,7 @@ public class Meet3Code extends LinearOpMode {
             }
             private void wristControl () {
                 if (gamepad1.right_bumper) {
-                    wrist.setPosition(0.8);
+                    wrist.setPosition(0.7);
                 } else if (gamepad1.left_bumper) {
                     wrist.setPosition(0.175);
                 }
