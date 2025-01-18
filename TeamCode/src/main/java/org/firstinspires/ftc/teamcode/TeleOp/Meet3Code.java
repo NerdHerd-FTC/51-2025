@@ -36,7 +36,7 @@ public class Meet3Code extends LinearOpMode {
 
 
     private static final double TICKS_PER_DEGREE = 537.7 / 360;
-    private static final double EXTENDED_SLIDE_TICKS =  2000;
+    private static final double EXTENDED_SLIDE_TICKS =  2100;
 
     private static final double COLLECT_SLIDE_TICKS =  810;
 
@@ -324,9 +324,9 @@ public class Meet3Code extends LinearOpMode {
 //                intake.setPower(0);
 //                }
          if(gamepad1.a) {
-             intake.setPosition(0.005);
+             intake.setPosition(0.2);
          } else if (gamepad1.b) {
-             intake.setPosition(0.01);
+             intake.setPosition(0.65);
          }
 //
        }
@@ -373,9 +373,9 @@ public class Meet3Code extends LinearOpMode {
             }
             private void wristControl () {
                 if (gamepad1.right_bumper) {
-                    wrist.setPosition(0.5);
+                    wrist.setPosition(0.8);
                 } else if (gamepad1.left_bumper) {
-                    wrist.setPosition(0);
+                    wrist.setPosition(0.175);
                 }
             }
 

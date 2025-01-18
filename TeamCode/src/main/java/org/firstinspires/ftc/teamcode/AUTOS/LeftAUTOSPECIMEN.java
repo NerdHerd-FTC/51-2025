@@ -84,7 +84,8 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
 
 
                 if (!initialized) {
-
+                    armRotatorLeft.setPower(0.5);
+                    armRotatorRight.setPower(0.5);
                     initialized = true;
                 }
                 // checks lift's current position
@@ -101,12 +102,16 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
                 armRotatorRight.setTargetPosition(target);
                 armRotatorRight.setMode((DcMotor.RunMode.RUN_TO_POSITION));
                 armRotatorLeft.setMode((DcMotor.RunMode.RUN_TO_POSITION));
+
                 double posR = armRotatorRight.getCurrentPosition();
                 double posL = armRotatorLeft.getCurrentPosition();
                 double error = (posR+posL)/2-target;
 
                 if (error > -10 && error < 10 ) {
+
                     // true causes the action to rerun
+                    armRotatorLeft.setPower(0);
+                    armRotatorRight.setPower(0);
                     return false;
                 } else {
 
@@ -127,7 +132,8 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
                 // powers on motor, if it is not on
 
                 if (!initialized) {
-
+                    armRotatorLeft.setPower(0.5);
+                    armRotatorRight.setPower(0.5);
                     initialized = true;
                 }
 
@@ -147,8 +153,7 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
                 armRotatorRight.setTargetPosition(target);
                 armRotatorRight.setMode((DcMotor.RunMode.RUN_TO_POSITION));
                 armRotatorLeft.setMode((DcMotor.RunMode.RUN_TO_POSITION));
-                armRotatorLeft.setPower(0.5);
-                armRotatorRight.setPower(0.5);
+
                 double posR = armRotatorRight.getCurrentPosition();
                 double posL = armRotatorLeft.getCurrentPosition();
                 double error = (posR+posL)/2-target;
@@ -157,7 +162,10 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
 
                 if (error > -10 && error < 10) {
                     // true causes the action to rerun
+                    armRotatorLeft.setPower(0);
+                    armRotatorRight.setPower(0);
                     return false;
+
                 } else {
                     // false stops action rerun
                     return true;
@@ -198,7 +206,8 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket packet) {
                 // powers on motor, if it is not on
                 if (!initialized) {
-
+                    slideLeft.setPower(0.5);
+                    slideRight.setPower(0.5);
                     initialized = true;
                 }
 
@@ -206,14 +215,16 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
                 slideLeft.setTargetPosition(2000);
                 slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                slideLeft.setPower(0.5);
-                slideRight.setPower(0.5);
+
                 // checks lift's current position
                 double posR = slideRight.getCurrentPosition();
                 double posL = slideLeft.getCurrentPosition();
                 double error = (posR+posL)/2-2000;
                 if (error > -10 && error < 10 ){
+
                     // true causes the action to rerun
+                    slideLeft.setPower(0);
+                    slideRight.setPower(0);
                     return false;
                 } else {
                     // false stops action rerun
@@ -234,7 +245,8 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket packet) {
                 // powers on motor, if it is not on
                 if (!initialized) {
-
+                    slideLeft.setPower(0.5);
+                    slideRight.setPower(0.5);
                     initialized = true;
                 }
                 // checks lift's current position
@@ -245,13 +257,14 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
                 slideLeft.setTargetPosition(810);
                     slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    slideLeft.setPower(0.5);
-                    slideRight.setPower(0.5);// checks lift's current position
+                    // checks lift's current position
                 double error = (posR+posL)/2 -810;
 
 
                 if (error> -10 && error <10 ){
                     // true causes the action to rerun
+                    slideLeft.setPower(0);
+                    slideRight.setPower(0);
                     return false;
                 } else {
                     // false stops action rerun
