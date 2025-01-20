@@ -41,8 +41,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
-@Autonomous(name = "leftSideAuto", group = "Autonomous")
-public class LeftAUTOSPECIMEN extends LinearOpMode {
+@Autonomous(name = "BAD AUTO", group = "Autonomous")
+public class LeftAutoBad extends LinearOpMode {
 
     public class armControl {
         private DcMotorEx armRotatorLeft;
@@ -94,7 +94,7 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
                 // checks lift's current position
 
 
-                 int   target = -500;
+                int   target = -500;
 
 
 
@@ -143,7 +143,7 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
 
 
 
-               int target = 1000;
+                int target = 1000;
 
 
 
@@ -255,9 +255,9 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
 
                 slideRight.setTargetPosition(810);
                 slideLeft.setTargetPosition(810);
-                    slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    // checks lift's current position
+                slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                // checks lift's current position
                 double error = (posR+posL)/2 -810;
 
 
@@ -399,7 +399,7 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
         Action tab2 = drive.actionBuilder(new Pose2d(-63, -53, Math.toRadians(45)))
                 .splineToLinearHeading(new Pose2d(-47.5, -50, Math.toRadians(90)), Math.toRadians(90))
                 .waitSeconds(1)
-                 .build();
+                .build();
         Action tab3 = drive.actionBuilder(new Pose2d(-47.5, -50, Math.toRadians(90)))
                 .splineToLinearHeading(new Pose2d(-63, -53, Math.toRadians(45)), Math.toRadians(45))
                 .waitSeconds(1)
@@ -432,24 +432,24 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
         if (isStopRequested()) return;
         Actions.runBlocking(
                 new SequentialAction(
-                        tab1,
-                        arm.ArmScoreBasket(),
-                        slide.SlideScoreTopBasket(),
-//                        wrist.closewrist(),
-//                        intake.openintake(),
-                        tab2,
-                        arm.ArmCollect(),
-                        slide.SlideCollect(),
-//                        wrist.openwrist(),
-//                        intake.closeintake(),
-                        arm.ArmScoreBasket(),
-                        slide.SlideScoreTopBasket(),
-                        tab3,
-                        arm.ArmScoreBasket(),
-                        slide.SlideScoreTopBasket(),
-//                        wrist.closewrist(),
-//                        intake.openintake(),
-                        tab4,
+//                        tab1,
+//                        arm.ArmScoreBasket(),
+//                        slide.SlideScoreTopBasket(),
+////                        wrist.closewrist(),
+////                        intake.openintake(),
+//                        tab2,
+//                        arm.ArmCollect(),
+//                        slide.SlideCollect(),
+////                        wrist.openwrist(),
+////                        intake.closeintake(),
+//                        arm.ArmScoreBasket(),
+//                        slide.SlideScoreTopBasket(),
+//                        tab3,
+//                        arm.ArmScoreBasket(),
+//                        slide.SlideScoreTopBasket(),
+////                        wrist.closewrist(),
+////                        intake.openintake(),
+//                        tab4,
 
 
 
@@ -462,9 +462,7 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
 
 
 
-                        new SleepAction(1)
 
-//                        intake.openintake()
                 )
         );
 
