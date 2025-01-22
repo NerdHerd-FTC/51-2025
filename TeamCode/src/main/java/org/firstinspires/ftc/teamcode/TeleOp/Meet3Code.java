@@ -180,7 +180,11 @@ public class Meet3Code extends LinearOpMode {
 
 
     private void slideManual() {
-        if(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810 && slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5 ){
+        if (gamepad2.x) {
+            targetPosition = (int) EXTENDED_SLIDE_TICKS;
+        } else if (gamepad2.y) {
+            targetPosition = 10;
+        } else if(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810 && slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5 ){
             if(gamepad2.a) {
                 targetPosition = targetPosition + 30;
 
@@ -206,24 +210,8 @@ public class Meet3Code extends LinearOpMode {
             } else {
                 targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
             }
-        }   else {
+        } else {
             targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
-        }
-        if (gamepad2.x) {
-
-            slideLeft.setPower(0.75);
-            slideRight.setPower(0.75);
-            targetPosition = (int) EXTENDED_SLIDE_TICKS;
-            slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        } else if (gamepad2.y) {
-
-            slideLeft.setPower(0.75);
-            slideRight.setPower(0.75);
-            targetPosition = 10;
-            slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
         slideRight.setPower(0.75);
@@ -357,15 +345,15 @@ public class Meet3Code extends LinearOpMode {
             target = -500;
             manual = false;
         } else if (gamepad2.right_bumper) {
-            target = 1000;
+            target = 975;
             manual = true;
-        } else if (gamepad2.dpad_up) {
+        } else if (gamepad2.dpad_up && armRPos > 1050 && armLPos > 1050 ) {
             target = target +8;
-        } else if (gamepad2.dpad_down) {
+        } else if (gamepad2.dpad_down && armRPos < -580 && armLPos < -580) {
             target = target -8;
-        } else if (gamepad2.dpad_right) {
+        } else if (gamepad2.dpad_right && armRPos > 1050 && armLPos > 1050) {
             target = target + 25;
-        }  else if (gamepad2.dpad_left) {
+        }  else if (gamepad2.dpad_left && armRPos < -580 && armLPos < -580) {
             target = target - 25;
         }
 
