@@ -17,9 +17,9 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 
-@TeleOp(name = "FIELDILT")
+@TeleOp(name = "DRIVERILT")
 @Config
-public class Meet3Code extends LinearOpMode {
+public class iltDriverO extends LinearOpMode {
     private DcMotor frontLeftMotor;
     private DcMotor backLeftMotor;
     private DcMotor frontRightMotor;
@@ -32,7 +32,7 @@ public class Meet3Code extends LinearOpMode {
 
     private Servo intake;
 
-   private Servo wrist;
+    private Servo wrist;
 
 
     private static final double TICKS_PER_DEGREE = 537.7 / 360;
@@ -137,11 +137,11 @@ public class Meet3Code extends LinearOpMode {
 //                manual = false;
 //            }
 
-                slideManual();
-               // armManual();
+            slideManual();
+            // armManual();
 
-                // armControl();
-                armPIDControl();
+            // armControl();
+            armPIDControl();
 
             telemetry.addData("SlideL", slideLeft.getCurrentPosition());
             telemetry.addData("SlideR", slideRight.getCurrentPosition());
@@ -224,30 +224,18 @@ public class Meet3Code extends LinearOpMode {
 
 
     private void driveControl() {
-        double y = -gamepad1.left_stick_y;
+        double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
+        double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
         double rx = gamepad1.right_stick_x;
-        double x = gamepad1.left_stick_x;
-
-        if (gamepad1.start) {
-            imu.resetYaw();
-        }
-
-        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-
-        // Rotate the movement direction counter to the bot's rotation
-        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-
-        rotX = rotX * 1.1;  // Counteract imperfect strafing
 
         // Denominator is the largest motor power (absolute value) or 1
         // This ensures all the powers maintain the same ratio,
         // but only if at least one is out of the range [-1, 1]
-        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-        double frontLeftPower = (rotY + rotX + rx) / denominator;
-        double backLeftPower = (rotY - rotX + rx) / denominator;
-        double frontRightPower = (rotY - rotX - rx) / denominator;
-        double backRightPower = (rotY + rotX - rx) / denominator;
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+        double frontLeftPower = (y + x + rx) / denominator;
+        double backLeftPower = (y - x + rx) / denominator;
+        double frontRightPower = (y - x - rx) / denominator;
+        double backRightPower = (y + x - rx) / denominator;
 
         frontLeftMotor.setPower(frontLeftPower);
         backLeftMotor.setPower(-backLeftPower);
@@ -273,7 +261,7 @@ public class Meet3Code extends LinearOpMode {
 //        armRotatorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //    }
 
-     private void intakeControl() {
+    private void intakeControl() {
 //            blueValue = colorSensor.blue();
 //            greenValue = colorSensor.green();
 //            redValue = colorSensor.red();
@@ -297,13 +285,13 @@ public class Meet3Code extends LinearOpMode {
 //            }   else {
 //                intake.setPower(0);
 //                }
-         if(gamepad1.a) {
-             intake.setPosition(0.2);
-         } else if (gamepad1.b) {
-             intake.setPosition(0.65);
-         }
+        if(gamepad1.a) {
+            intake.setPosition(0.2);
+        } else if (gamepad1.b) {
+            intake.setPosition(0.65);
+        }
 
-       }
+    }
 
 
     private void armPIDControl() {
@@ -340,15 +328,16 @@ public class Meet3Code extends LinearOpMode {
         telemetry.update();
     }
 
-            private void wristControl () {
-                if (gamepad1.right_bumper) {
-                    wrist.setPosition(0.7);
-                } else if (gamepad1.left_bumper) {
-                    wrist.setPosition(0.175);
-                }
-            }
-
+    private void wristControl () {
+        if (gamepad1.right_bumper) {
+            wrist.setPosition(0.7);
+        } else if (gamepad1.left_bumper) {
+            wrist.setPosition(0.175);
+        }
     }
+
+}
+
 
 
 

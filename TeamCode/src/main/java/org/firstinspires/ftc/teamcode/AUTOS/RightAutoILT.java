@@ -41,8 +41,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
-@Autonomous(name = "leftSideAuto", preselectTeleOp = "FIELDILT")
-public class LeftAUTOSPECIMEN extends LinearOpMode {
+@Autonomous(name = "rightSideAUTO", preselectTeleOp = "FIELDILT")
+public class RightAutoILT extends LinearOpMode {
 
     public class armControl {
         private DcMotorEx armRotatorLeft;
@@ -73,7 +73,7 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
 
         }
 
-        public class armScoreBasket implements Action {
+        public class armScoreBar implements Action {
             // checks if the lift motor has been powered on
             private boolean initialized = false;
 
@@ -100,7 +100,7 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
                 // checks lift's current position
 
 
-                 int   target = -500;
+                int   target = 100;
 
 
 
@@ -127,8 +127,8 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
                 }
             }
         }
-        public Action ArmScoreBasket() {
-            return new armScoreBasket();
+        public Action ArmScoreBar() {
+            return new armScoreBar();
         }
         public class armTouch implements Action {
             // checks if the lift motor has been powered on
@@ -208,7 +208,7 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
 
 
 
-               int target = 1000;
+                int target = 1000;
 
 
 
@@ -324,9 +324,9 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
 
                 slideRight.setTargetPosition(810);
                 slideLeft.setTargetPosition(810);
-                    slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    // checks lift's current position
+                slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                // checks lift's current position
                 double error = (posR+posL)/2 -810;
 
 
@@ -686,5 +686,6 @@ public class LeftAUTOSPECIMEN extends LinearOpMode {
 
 
 }
+
 
 
