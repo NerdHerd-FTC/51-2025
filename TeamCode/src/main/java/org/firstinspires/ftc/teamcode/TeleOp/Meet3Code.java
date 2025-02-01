@@ -30,7 +30,9 @@ public class Meet3Code extends LinearOpMode {
     private DcMotorEx armRotatorRight;
     private DcMotorEx armRotatorLeft;
 
-    private Servo intake;
+    private CRServo rollerR;
+    private CRServo rollerL;
+
 
    private Servo wrist;
 
@@ -83,7 +85,10 @@ public class Meet3Code extends LinearOpMode {
         slideLeft = hardwareMap.dcMotor.get("slideL");
         armRotatorRight = (DcMotorEx) hardwareMap.dcMotor.get("armRR");
         armRotatorLeft = (DcMotorEx) hardwareMap.dcMotor.get("armRL");
-        intake = hardwareMap.servo.get("intake");
+        rollerR = hardwareMap.crservo.get("rollerR");
+        rollerL = hardwareMap.crservo.get("rollerL");
+
+
         wrist = hardwareMap.servo.get("wrist");
 
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -97,7 +102,9 @@ public class Meet3Code extends LinearOpMode {
         armRotatorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intake.setDirection(Servo.Direction.REVERSE);
+        rollerR.setDirection(CRServo.Direction.REVERSE);
+        rollerL.setDirection(CRServo.Direction.REVERSE);
+
         resetMotorEncoders();
         int armRPos = armRotatorRight.getCurrentPosition();
         int armLPos = armRotatorLeft.getCurrentPosition();
@@ -148,8 +155,7 @@ public class Meet3Code extends LinearOpMode {
             telemetry.addData("armL", armRotatorLeft.getCurrentPosition());
             telemetry.addData("armR", armRotatorRight.getCurrentPosition());
             double  wristPos = wrist.getPosition();
-            double  intakePos = intake.getPosition();
-            telemetry.addData("inPos", intakePos);
+
             telemetry.addData("wristPos", wristPos);
 
         }
@@ -189,28 +195,16 @@ public class Meet3Code extends LinearOpMode {
 
             } else if (gamepad2.b) {
                 targetPosition = targetPosition - 30;
-            } else {
-                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
             }
         } else if(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810 && !(slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5)) {
-            if (gamepad2.b) {
-                targetPosition = targetPosition - 30;
-            } else {
-                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
-            }
+
             if (gamepad2.a) {
                 targetPosition = targetPosition + 30;
-            } else {
-                targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
             }
         } else if(!(slideLeft.getCurrentPosition() < 810 && slideRight.getCurrentPosition() <810) && slideLeft.getCurrentPosition() > -5 && slideRight.getCurrentPosition() > -5) {
             if (gamepad2.b) {
                 targetPosition = targetPosition - 30;
-            } else {
-                targetPosition = (slideRight.getCurrentPosition()+slideLeft.getCurrentPosition())/2 ;
             }
-        } else {
-            targetPosition = (slideRight.getCurrentPosition() + slideLeft.getCurrentPosition()) / 2;
         }
 
         slideRight.setPower(0.75);
@@ -274,34 +268,37 @@ public class Meet3Code extends LinearOpMode {
 //    }
 
      private void intakeControl() {
-//            blueValue = colorSensor.blue();
-//            greenValue = colorSensor.green();
-//            redValue = colorSensor.red();
-//            alphaValue = colorSensor.alpha();
-//            telemetry.addData("redvalue","%.2f", redValue );
-//            telemetry.addData("bluevalue","%.2f", blueValue );
-//            telemetry.addData("greenvalue","%.2f", greenValue );
-//            telemetry.addData("alphavalue","%.2f", alphaValue );
-//            if (gamepad1.a) {
-//                if (blueValue > 2500 && greenValue < 1500 && redValue < 1500) {
-//                    intake.setPower(0);
-//                } else if (blueValue < 2500 && greenValue > 2500 && redValue > 2500) {
-//                    intake.setPower(0);
-//                } else if (blueValue < 2500 && greenValue < 1500 && redValue > 2500) {
-//                    intake.setPower(0.4);
-//                } else {
-//                    intake.setPower(0.7);
-//                }
-//            } else if(gamepad1.b){
-//                intake.setPower(-0.7);
-//            }   else {
-//                intake.setPower(0);
-//                }
-         if(gamepad1.a) {
-             intake.setPosition(0.2);
-         } else if (gamepad1.b) {
-             intake.setPosition(0.65);
-         }
+            blueValue = colorSensor.blue();
+            greenValue = colorSensor.green();
+            redValue = colorSensor.red();
+            alphaValue = colorSensor.alpha();
+            telemetry.addData("redvalue","%.2f", redValue );
+            telemetry.addData("bluevalue","%.2f", blueValue );
+            telemetry.addData("greenvalue","%.2f", greenValue );
+            telemetry.addData("alphavalue","%.2f", alphaValue );
+            if (gamepad1.a) {
+                if (blueValue > 2500 && greenValue < 1500 && redValue < 1500) {
+                    rollerR.setPower(0);
+                    rollerL.setPower(0);
+                } else if (blueValue < 2500 && greenValue > 2500 && redValue > 2500) {
+                    rollerL.setPower(0);
+                    rollerR.setPower(0);
+                } else if (blueValue < 2500 && greenValue < 1500 && redValue > 2500) {
+                    rollerR.setPower(0.4);
+                    rollerL.setPower(0.4);
+
+                } else {
+                    rollerR.setPower(0.7);
+                    rollerL.setPower(0.7);
+                }
+            } else if(gamepad1.b){
+                rollerR.setPower(-0.4);
+                rollerL.setPower(-0.4);
+            }   else {
+                rollerR.setPower(0);
+                rollerL.setPower(0);
+                }
+
 
        }
 
@@ -321,13 +318,13 @@ public class Meet3Code extends LinearOpMode {
         } else if (gamepad2.right_bumper) {
             target = 975;
             manual = true;
-        } else if (gamepad2.dpad_up && armRPos > 1050 && armLPos > 1050 ) {
+        } else if (gamepad2.dpad_up && armRPos < 1050 && armLPos < 1050 ) {
             target = target +8;
-        } else if (gamepad2.dpad_down && armRPos < -580 && armLPos < -580) {
+        } else if (gamepad2.dpad_down ) {
             target = target -8;
-        } else if (gamepad2.dpad_right && armRPos > 1050 && armLPos > 1050) {
+        } else if (gamepad2.dpad_right && armRPos < 1050 && armLPos < 1050) {
             target = target + 25;
-        }  else if (gamepad2.dpad_left && armRPos < -580 && armLPos < -580) {
+        }  else if (gamepad2.dpad_left ) {
             target = target - 25;
         }
 
