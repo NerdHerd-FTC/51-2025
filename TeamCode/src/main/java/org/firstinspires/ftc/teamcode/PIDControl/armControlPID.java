@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
 
 @Config
 @TeleOp
@@ -17,15 +18,19 @@ public class armControlPID extends OpMode {
 
     private PIDController controller;
 
-    public static double p = 0.005, i = 0.0008, d = 0.0002;
-    public static double f = 0.0001;
+    public static double p = 0.00, i = 0.000, d = 0.000;
+    public static double f = 0.000;
 
-    public static int target = 0;
+    public static int target ;
 
     private final double tick_per_degree = 537.7/360;
 
     private DcMotorEx armR;
     private DcMotorEx armL;
+
+    private DcMotorEx slideRight;
+
+    private DcMotorEx slideLeft;
 
 
 
@@ -37,6 +42,8 @@ public class armControlPID extends OpMode {
 
         armR = hardwareMap.get(DcMotorEx.class, "armRR");
         armL = hardwareMap.get(DcMotorEx.class, "armRL");
+        slideRight = (DcMotorEx) hardwareMap.dcMotor.get("slideR");
+        slideLeft = (DcMotorEx) hardwareMap.dcMotor.get("slideL");
 
         armR.setDirection(DcMotorSimple.Direction.REVERSE);
         armL.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -48,21 +55,27 @@ public class armControlPID extends OpMode {
         controller.setPID(p, i, d);
         int armRPos = armR.getCurrentPosition();
         int armLPos = armL.getCurrentPosition();
+        int slideRPos = slideRight.getCurrentPosition();
+        int slideLPos = slideLeft.getCurrentPosition();
 
-        double pid = controller.calculate(armRPos, target);
+        int pos = (int)(armRPos+armLPos+slideRPos+slideLPos)/4;
+
+        double pid = controller.calculate(pos, target);
 
         double ff = Math.cos(Math.toRadians(target / tick_per_degree)) * f;
 
         double power = pid + ff;
-        if(gamepad1.a) {
-            target = 580;
-        } else if (gamepad1.b) {
-            target = 1000;
-        }
+
         armR.setPower(power);
         armL.setPower(power);
+        slideRight.setPower(power);
+        slideLeft.setPower(power);
         telemetry.addData("posR", armRPos);
         telemetry.addData("posL", armLPos);
+        telemetry.addData("posR", slideRPos);
+        telemetry.addData("posL", slideLPos);
+
+
         telemetry.addData("target", target);
         telemetry.update();
     }

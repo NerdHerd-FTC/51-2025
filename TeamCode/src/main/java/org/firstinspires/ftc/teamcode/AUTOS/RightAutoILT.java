@@ -532,7 +532,7 @@ public class RightAutoILT extends LinearOpMode {
     }
     @Override
     public void runOpMode() {
-        Pose2d initialPose = new Pose2d(-47, -63.5, Math.toRadians(0));
+        Pose2d initialPose = new Pose2d(-7, -61.5, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         armControl arm = new armControl(hardwareMap);
@@ -543,47 +543,75 @@ public class RightAutoILT extends LinearOpMode {
         int visionOutputPosition = 1;
 
         Action tab1 = drive.actionBuilder(initialPose)
-                .splineToLinearHeading(new Pose2d(-63, -58, Math.toRadians(45)), Math.toRadians(45))
-                .waitSeconds(1)
+                .splineToLinearHeading(new Pose2d(4, -35, Math.toRadians(90)), Math.toRadians(90))
+
 
                 .build();
 
         Action tab2 = drive.actionBuilder(new Pose2d(-63, -58, Math.toRadians(45)))
-                .splineToLinearHeading(new Pose2d(-52.5, -50, Math.toRadians(90)), Math.toRadians(90))
-                .waitSeconds(1)
+                .splineToLinearHeading(new Pose2d(4, -35, Math.toRadians(90)), Math.toRadians(90))
+
+                .splineToLinearHeading(new Pose2d(35, -43, Math.toRadians(90)), Math.toRadians(90))
+
+                .splineToLinearHeading(new Pose2d(35, -9, Math.toRadians(90)), Math.toRadians(-90))
+
+                .splineToLinearHeading(new Pose2d(48, -9, Math.toRadians(90)), Math.toRadians(90))
+
+                .splineToLinearHeading(new Pose2d(48, -55, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -33, Math.toRadians(90)), Math.toRadians(90))
+
+                .splineToLinearHeading(new Pose2d(48, -9, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+
+                .splineToLinearHeading(new Pose2d(57, -9, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+
+                .splineToLinearHeading(new Pose2d(57, -55, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -33, Math.toRadians(90)), Math.toRadians(90))
+
+                .splineToLinearHeading(new Pose2d(57, -9, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+
+                .splineToLinearHeading(new Pose2d(62, -9, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+
+                .splineToLinearHeading(new Pose2d(62, -55, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+
+                .splineToLinearHeading(new Pose2d(40, -57, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+
                 .build();
         Action tab3 = drive.actionBuilder(new Pose2d(-52.5, -50, Math.toRadians(90)))
-                .splineToLinearHeading(new Pose2d(-63, -58, Math.toRadians(45)), Math.toRadians(45))
-                .waitSeconds(1)
+                .splineToLinearHeading(new Pose2d(40, -57, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//
                 .build();
         Action tab4 = drive.actionBuilder(new Pose2d(-63, -58, Math.toRadians(45)))
 //                .splineToLinearHeading(new Pose2d(-34, -12, Math.toRadians(0)), Math.toRadians(0))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
 //                .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(-56.5, -50, Math.toRadians(90)), Math.toRadians(90))
-                .waitSeconds(1)
+                .splineToLinearHeading(new Pose2d(7, -37, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//
                 .build();
         Action tab5 = drive.actionBuilder(new Pose2d(-56.5, -50, Math.toRadians(90)))
 //                .splineToLinearHeading(new Pose2d(-34, -12, Math.toRadians(0)), Math.toRadians(0))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
 //                .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(-63, -58, Math.toRadians(45)), Math.toRadians(45))
-                .waitSeconds(1)
+                .splineToLinearHeading(new Pose2d(40, -57, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//
                 .build();
         Action tab6 = drive.actionBuilder(new Pose2d(-63, -58, Math.toRadians(45)))
 //
-                .splineToLinearHeading(new Pose2d(-60.5, -50, Math.toRadians(90)), Math.toRadians(90))
-                .waitSeconds(1)
+                .splineToLinearHeading(new Pose2d(9, -37, Math.toRadians(90)), Math.toRadians(90))//.splineToL
+//
                 .build();
         Action tab7 = drive.actionBuilder(new Pose2d(-60.5, -50, Math.toRadians(90)))
 //                .splineToLinearHeading(new Pose2d(-34, -12, Math.toRadians(0)), Math.toRadians(0))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
 //                .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(-63, -58, Math.toRadians(45)), Math.toRadians(45))
-                .waitSeconds(1)
+                .splineToLinearHeading(new Pose2d(40, -57, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearH
+//
                 .build();
         Action tab8 = drive.actionBuilder(new Pose2d(-63, -58, Math.toRadians(90)))
 //                .splineToLinearHeading(new Pose2d(-34, -12, Math.toRadians(0)), Math.toRadians(0))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
 //                .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(-34, -12, Math.toRadians(0)), Math.toRadians(0))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
-                .waitSeconds(1)
+                .splineToLinearHeading(new Pose2d(11, -37, Math.toRadians(90)), Math.toRadians(90))//.splineToL
+//
+                .build();
+        Action tab9 = drive.actionBuilder(new Pose2d(-63, -58, Math.toRadians(90)))
+//                .splineToLinearHeading(new Pose2d(-34, -12, Math.toRadians(0)), Math.toRadians(0))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//                .waitSeconds(1)
+                .splineToLinearHeading(new Pose2d(52, -56, Math.toRadians(90)), Math.toRadians(90))//.splineToL
+//
                 .build();
 
 
@@ -591,20 +619,52 @@ public class RightAutoILT extends LinearOpMode {
 
 
 
-//                .splineToLinearHeading(new Pose2d(-47.5, -50, Math.toRadians(90)), Math.toRadians(90))
-//                .waitSeconds(1)
-//                .splineToLinearHeading(new Pose2d(-54, -53, Math.toRadians(45)), Math.toRadians(45))
-//                .waitSeconds(1)
-//                .splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -33, Math.toRadians(90)), Math.toRadians(90))
-//                .waitSeconds(1)
-//                .splineToLinearHeading(new Pose2d(-53, -53, Math.toRadians(45)), Math.toRadians(45))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
-//                .waitSeconds(1)
-//                .splineToLinearHeading(new Pose2d(-57.5, -50, Math.toRadians(115)), Math.toRadians(115))//.splineToLinearHeading(new Pose2d(-58, -33, Math.toRadians(90)), Math.toRadians(90))
-//                .waitSeconds(1)
-//                .splineToLinearHeading(new Pose2d(-53, -53, Math.toRadians(45)), Math.toRadians(45))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
-//                .waitSeconds(1)
-//                .splineToLinearHeading(new Pose2d(-25, -12, Math.toRadians(0)), Math.toRadians(0))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
-//                .waitSeconds(1)
+
+                //intake off but powered
+
+                //  .strafeTo(new Vector2d(-53, -37))
+                //arm is at specimen position
+                //.strafeTo(new Vector2d(9, -33))
+                // .strafeTo(new Vector2d(9, -43))
+                // .setTangent(Math.toRadians(180))
+                //.strafeTo(new Vector2d(-34, -34))
+//
+//                .splineToLinearHeading(new Pose2d(7, -35, Math.toRadians(90)), Math.toRadians(90))
+//
+//                .splineToLinearHeading(new Pose2d(35, -43, Math.toRadians(90)), Math.toRadians(90))
+//
+//                .splineToLinearHeading(new Pose2d(35, -9, Math.toRadians(90)), Math.toRadians(-90))
+//
+//                .splineToLinearHeading(new Pose2d(48, -9, Math.toRadians(90)), Math.toRadians(90))
+//
+//                .splineToLinearHeading(new Pose2d(48, -55, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -33, Math.toRadians(90)), Math.toRadians(90))
+//
+//                .splineToLinearHeading(new Pose2d(48, -9, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//
+//                .splineToLinearHeading(new Pose2d(57, -9, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//
+//                .splineToLinearHeading(new Pose2d(57, -55, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -33, Math.toRadians(90)), Math.toRadians(90))
+//
+//                .splineToLinearHeading(new Pose2d(57, -9, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//
+//                .splineToLinearHeading(new Pose2d(62, -9, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//
+//                .splineToLinearHeading(new Pose2d(62, -55, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//
+//                .splineToLinearHeading(new Pose2d(40, -57, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//
+//                .splineToLinearHeading(new Pose2d(9, -37, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//
+//                .splineToLinearHeading(new Pose2d(40, -57, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(60)), Math.toRadians(60))
+//
+//                .splineToLinearHeading(new Pose2d(11, -37, Math.toRadians(90)), Math.toRadians(90))//.splineToL
+//
+//                .splineToLinearHeading(new Pose2d(40, -57, Math.toRadians(90)), Math.toRadians(90))//.splineToLinearH
+//
+//                .splineToLinearHeading(new Pose2d(11, -37, Math.toRadians(90)), Math.toRadians(90))
+//
+//                .splineToLinearHeading(new Pose2d(52, -56, Math.toRadians(90)), Math.toRadians(90))
+//                .build());
 
         waitForStart();
 
@@ -612,7 +672,7 @@ public class RightAutoILT extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         tab1,
-                        arm.ArmScoreBasket(),
+                        //arm.ArmScoreBasket(),
                         slide.SlideScoreTopBasket(),
                         slide.SlideDown(),
 //                        wrist.closewrist(),
@@ -622,7 +682,7 @@ public class RightAutoILT extends LinearOpMode {
                         slide.SlideCollect(),
 //                        wrist.openwrist(),
 //                        intake.closeintake(),
-                        arm.ArmScoreBasket(),
+                      //  arm.ArmScoreBasket(),
                         slide.SlideScoreTopBasket(),
                         tab3,
                         slide.SlideDown(),
@@ -633,7 +693,7 @@ public class RightAutoILT extends LinearOpMode {
                         slide.SlideCollect(),
 //                        wrist.openwrist(),
 //                        intake.closeintake(),
-                        arm.ArmScoreBasket(),
+                     //   arm.ArmScoreBasket(),
                         tab5,
                         slide.SlideScoreTopBasket(),
                         slide.SlideDown(),
@@ -644,7 +704,7 @@ public class RightAutoILT extends LinearOpMode {
                         slide.SlideCollect(),
 //                        wrist.openwrist(),
 //                        intake.closeintake(),
-                        arm.ArmScoreBasket(),
+                      //  arm.ArmScoreBasket(),
                         tab7,
                         slide.SlideScoreTopBasket(),
                         slide.SlideDown(),
