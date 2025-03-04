@@ -45,8 +45,15 @@ public class armControlPID extends OpMode {
         slideRight = (DcMotorEx) hardwareMap.dcMotor.get("slideR");
         slideLeft = (DcMotorEx) hardwareMap.dcMotor.get("slideL");
 
-        armR.setDirection(DcMotorSimple.Direction.REVERSE);
-        armL.setDirection(DcMotorSimple.Direction.FORWARD);
+
+       
+
+
+        armR.setDirection(DcMotorSimple.Direction.FORWARD);
+        armL.setDirection(DcMotorSimple.Direction.REVERSE);
+        slideLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        slideRight.setDirection((DcMotorEx.Direction.FORWARD));
+
 
     }
 

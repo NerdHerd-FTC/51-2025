@@ -19,7 +19,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 
-@TeleOp(name = "FIELDILT")
+@TeleOp(name = "BPTELE")
 @Config
 public class BackUpTeleOP extends LinearOpMode {
     private DcMotor frontLeftMotor;
@@ -71,8 +71,8 @@ public class BackUpTeleOP extends LinearOpMode {
 
 
     private PIDController controller;
-    public static double p = 0.00, i = 0.000, d = 0.000;
-    public static double f = 0.000;
+    public static double p = 0.007, i = 0.0001, d = 0.0002;
+    public static double f = 0.0001;
 
 
     public static int target = 0;
@@ -96,13 +96,13 @@ public class BackUpTeleOP extends LinearOpMode {
         accL = hardwareMap.crservo.get("accL");
 
 
-        inWrist = hardwareMap.servo.get("inWrist");
+       inWrist = hardwareMap.servo.get("inWrist");
         claw = hardwareMap.servo.get("claw");
         roClaw = hardwareMap.servo.get("roClaw");
-
-
-
-
+//
+//
+//
+//
         grabR = hardwareMap.servo.get("grabR");
         grabL = hardwareMap.servo.get("grabL");
 
@@ -112,10 +112,10 @@ public class BackUpTeleOP extends LinearOpMode {
 
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        armRotatorRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        armRotatorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        slideLeft.setDirection(DcMotorEx.Direction.FORWARD);
-        slideRight.setDirection((DcMotorEx.Direction.REVERSE));
+        armRotatorRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        armRotatorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        slideLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        slideRight.setDirection((DcMotorEx.Direction.FORWARD));
 
         armRotatorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armRotatorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -136,8 +136,8 @@ public class BackUpTeleOP extends LinearOpMode {
 
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.DOWN,
-                RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
         imu.initialize(parameters);
 
 
@@ -149,9 +149,15 @@ public class BackUpTeleOP extends LinearOpMode {
 
 
         while (opModeIsActive()) {
-            driveControl();
-            //   intakeControl();
-            wristControl();
+                                                                                      if (gamepad1.left_trigger > 0.2) {
+                slowDriveControl();
+            } else {
+                driveControl();
+            }
+
+
+            intakeControl();
+           wristControl();
 
 
 //            if (gamepad2.back) {
@@ -161,9 +167,9 @@ public class BackUpTeleOP extends LinearOpMode {
 //            }
 
 
-            // armManual();
 
-            // armControl();
+
+             armControl();
             armPIDControl();
             intakeControl();
             grabControl();
@@ -176,9 +182,9 @@ public class BackUpTeleOP extends LinearOpMode {
             telemetry.addData("SlideR", slideRight.getCurrentPosition());
             telemetry.addData("armL", armRotatorLeft.getCurrentPosition());
             telemetry.addData("armR", armRotatorRight.getCurrentPosition());
-            double wristPos = inWrist.getPosition();
+            //double wristPos = inWrist.getPosition();
 
-            telemetry.addData("wristPos", wristPos);
+         //   telemetry.addData("wristPos", wristPos);
 
         }
     }
@@ -233,9 +239,42 @@ public class BackUpTeleOP extends LinearOpMode {
         double backRightPower = (rotY + rotX - rx) / denominator;
 
         frontLeftMotor.setPower(frontLeftPower);
-        backLeftMotor.setPower(-backLeftPower);
+        backLeftMotor.setPower(backLeftPower);
         frontRightMotor.setPower(frontRightPower);
         backRightMotor.setPower(backRightPower);
+
+
+    }
+    private void slowDriveControl() {
+        double y = -gamepad1.left_stick_y;
+        double rx = gamepad1.right_stick_x;
+        double x = gamepad1.left_stick_x;
+
+        if (gamepad1.start) {
+            imu.resetYaw();
+        }
+
+        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+
+        // Rotate the movement direction counter to the bot's rotation
+        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+
+        rotX = rotX * 1.1;  // Counteract imperfect strafing
+
+        // Denominator is the largest motor power (absolute value) or 1
+        // This ensures all the powers maintain the same ratio,
+        // but only if at least one is out of the range [-1, 1]
+        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+        double frontLeftPower = (rotY + rotX + rx) / denominator;
+        double backLeftPower = (rotY - rotX + rx) / denominator;
+        double frontRightPower = (rotY - rotX - rx) / denominator;
+        double backRightPower = (rotY + rotX - rx) / denominator;
+
+        frontLeftMotor.setPower(0.3*frontLeftPower);
+        backLeftMotor.setPower(0.3*backLeftPower);
+        frontRightMotor.setPower(0.3*frontRightPower);
+        backRightMotor.setPower(0.3*backRightPower);
 
 
     }
@@ -254,10 +293,10 @@ public class BackUpTeleOP extends LinearOpMode {
 
     private void intakeControl() {
 
-        if (gamepad1.a) {
-            rollerR.setPower(.7);
-        } else if (gamepad1.b) {
-            rollerR.setPower(-.3);
+        if (gamepad2.a) {
+            rollerR.setPower(-1);
+        } else if (gamepad2.b) {
+            rollerR.setPower(1);
         } else {
             rollerR.setPower(0);
         }
@@ -265,12 +304,15 @@ public class BackUpTeleOP extends LinearOpMode {
 
     }
     private void actControl () {
-        if (gamepad1.x) {
+        if (gamepad1.dpad_up) {
             accR.setPower(1);
             accL.setPower(1);
-        } else if (gamepad1.y) {
+        } else if (gamepad1.dpad_down) {
             accR.setPower(-1);
             accL.setPower(-1);
+        } else {
+            accR.setPower(0);
+            accL.setPower(0);
         }
     }
 
@@ -281,22 +323,26 @@ public class BackUpTeleOP extends LinearOpMode {
         int slideRPos = armRotatorRight.getCurrentPosition();
         int slideLPos = armRotatorLeft.getCurrentPosition();
 
-        int currentP = (int) ((armRPos + armLPos + slideRPos + slideLPos) / 4);
+        int currentP = (int) ((armRPos + armLPos + slideRPos ) / 3);
         double pid = controller.calculate(currentP, target);
 
         double ff = Math.cos(Math.toRadians(target / tick_per_degree)) * f;
 
         double power = pid + ff;
         if (gamepad2.left_bumper) {
-            target = -500;
+            target = 480;
             manual = false;
         } else if (gamepad2.right_bumper) {
-            target = 975;
+            target = 1500;
             manual = true;
-        } else if (gamepad2.dpad_right && armRPos < 1050 && armLPos < 1050) {
-            target = target + 25;
-        } else if (gamepad2.dpad_left) {
-            target = target - 25;
+        } else if (gamepad2.dpad_right && armRPos < 1720 && armLPos < 1720) {
+            target = target + 10;
+        } else if (gamepad2.dpad_left && armRPos > 0 && armLPos >0) {
+            target = target - 10;
+        } else if (gamepad1.dpad_right && armRPos < 1720 && armLPos < 1720) {
+            target = target + 30;
+        } else if (gamepad1.dpad_left && armRPos > 0 && armLPos >0) {
+            target = target - 30;
         }
 
 
@@ -312,53 +358,46 @@ public class BackUpTeleOP extends LinearOpMode {
     }
 
     private void wristControl() {
-        if (gamepad1.right_bumper) {
-            inWrist.setPosition(0.7);
-        } else if (gamepad1.left_bumper) {
-            inWrist.setPosition(0.175);
+        if (gamepad2.x) {
+            inWrist.setPosition(0.2);
+        } else if(gamepad2.y) {
+            inWrist.setPosition(0.93);
         }
     }
 
     private void grabControl() {
-        if (gamepad2.a) {
-            grabR.setPosition(.7);
-            grabL.setPosition(.7);
-        } else if (gamepad2.b) {
-            grabR.setPosition(0.0);
-            grabL.setPosition(0.0);
-        } else if (gamepad2.x && grabR.getPosition() < 0.7) {
-            grabR.setPosition(grabR.getPosition() + 0.2);
-            grabL.setPosition(grabR.getPosition() + 0.2);
-        } else if (gamepad2.y && grabR.getPosition() > 0.0) {
-            grabR.setPosition(grabR.getPosition() - 0.2);
-            grabL.setPosition(grabR.getPosition() - 0.2);
+        if (gamepad1.right_bumper) {
+            grabR.setPosition(0);
+            grabL.setPosition(1);
+        } else if (gamepad1.left_bumper) {
+            grabR.setPosition(0.4);
+            grabL.setPosition(0.6);
         }
     }
 
     private void armControl() {
-        if (gamepad2.left_bumper) {
-            armR.setPosition(.7);
-            armL.setPosition(.7);
-        } else if (gamepad2.right_bumper) {
-            armR.setPosition(0.2);
-            armL.setPosition(0.2);
+        if (gamepad2.dpad_up) {
+            armR.setPosition(0.35);
+            armL.setPosition(0.65);
+        } else if (gamepad2.dpad_down) {
+            armR.setPosition(0.88);
+            armL.setPosition(0.12);
         }
     }
 
+
+
     private void clawControl() {
-        if (gamepad1.right_bumper) {
-            claw.setPosition(.7);
-        } else if (gamepad1.left_bumper) {
+        if (gamepad1.x) {
+            claw.setPosition(0);
+        } else if (gamepad1.y) {
             claw.setPosition(0.2);
         }
     }
 
     private void roClawControl() {
-        if (gamepad1.dpad_left) {
-            roClaw.setPosition(.7);
-        } else if (gamepad1.dpad_right) {
-            roClaw.setPosition(0.2);
-        }
+        roClaw.setPosition(.5);
+
     }
 
 
