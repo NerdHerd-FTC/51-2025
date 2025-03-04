@@ -26,8 +26,11 @@ public class linearSliderTesting extends LinearOpMode {
         slideRight = (DcMotorEx) hardwareMap.dcMotor.get("slideR");
         slideLeft = (DcMotorEx) hardwareMap.dcMotor.get("slideL");
 
-        armRotatorRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        armRotatorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        armRotatorRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        armRotatorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        slideRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        slideLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         armRotatorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armRotatorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -45,8 +48,8 @@ public class linearSliderTesting extends LinearOpMode {
             int armLPos = armRotatorLeft.getCurrentPosition();
             int slideRPos = slideRight.getCurrentPosition();
             int slideLPos = slideLeft.getCurrentPosition();
-            telemetry.addData("posR", slideRPos);
-            telemetry.addData("posL", slideLPos);
+            telemetry.addData("posRs", slideRPos);
+            telemetry.addData("posLs", slideLPos);
             telemetry.addData("posR", armRPos);
             telemetry.addData("posL", armLPos);
 

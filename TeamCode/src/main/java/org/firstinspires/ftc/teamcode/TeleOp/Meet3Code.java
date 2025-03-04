@@ -95,8 +95,8 @@ public class Meet3Code extends LinearOpMode {
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         armRotatorRight.setDirection(DcMotorSimple.Direction.REVERSE);
         armRotatorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        slideLeft.setDirection(DcMotorEx.Direction.FORWARD);
-        slideRight.setDirection((DcMotorEx.Direction.REVERSE));
+        slideRight.setDirection(DcMotorEx.Direction.FORWARD);
+        slideLeft.setDirection((DcMotorEx.Direction.REVERSE));
 
         armRotatorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armRotatorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
